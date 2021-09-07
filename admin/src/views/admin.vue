@@ -418,7 +418,7 @@
         <div class="footer-inner">
           <div class="footer-content">
 						<span class="bigger-120">
-							<span class="blue bolder">Ssica</span>
+							<span class="blue bolder"><Ssica></Ssica></span>
 							在线视频课程 &copy; 2099-2099
 						</span>
 
