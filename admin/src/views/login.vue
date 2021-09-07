@@ -6,7 +6,7 @@
           <div class="login-container">
             <div class="center">
               <h1>
-                <i class="ace-icon fa fa-leaf green"></i> &nbsp;
+                <i class="ace-icon fa fa-leaf green"></i>
                 <span class="">控台登录</span>
               </h1>
             </div>
@@ -27,17 +27,17 @@
                     <form>
                       <fieldset>
                         <label class="block clearfix">
-														<span class="block input-icon input-icon-right">
-															<input type="text" class="form-control" placeholder="Username"/>
-															<i class="ace-icon fa fa-user"></i>
-														</span>
+                          <span class="block input-icon input-icon-right">
+                            <input type="text" class="form-control" placeholder="Username"/>
+                            <i class="ace-icon fa fa-user"></i>
+                          </span>
                         </label>
 
                         <label class="block clearfix">
-														<span class="block input-icon input-icon-right">
-															<input type="password" class="form-control" placeholder="Password"/>
-															<i class="ace-icon fa fa-lock"></i>
-														</span>
+                          <span class="block input-icon input-icon-right">
+                            <input type="password" class="form-control" placeholder="Password"/>
+                            <i class="ace-icon fa fa-lock"></i>
+                          </span>
                         </label>
 
                         <div class="space"></div>
@@ -48,7 +48,9 @@
                             <span class="lbl">记住我</span>
                           </label>
 
-                          <button type="button" class="width-35 pull-right btn btn-sm btn-primary">
+                          <button type="button"
+                                  class="width-35 pull-right btn btn-sm btn-primary"
+                                  v-on:click="login()">
                             <i class="ace-icon fa fa-key"></i>
                             <span class="bigger-110">登录</span>
                           </button>
@@ -74,6 +76,11 @@
 <script>
 $('body').attr('class', 'login-layout light-login');
 export default {
-  name: 'app',
+  name: 'login',
+  methods: {
+    login() {
+      this.$router.push("/admin")
+    }
+  }
 }
 </script>
