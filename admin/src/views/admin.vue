@@ -474,9 +474,27 @@
 export default {
   name: "admin",
   mounted: function() {
+    let _this = this;
     $("body").removeClass("login-layout light-login");
     $("body").attr("class", "no-skin");
     // console.log("admin");
+    //初始化的时候sidebar激活方法不会被监听，需要手动加载
+    _this.activeSidebar(_this.$route.name.replace("/", "-") + "-sidebar");
+  },
+  /**
+   * 通过该方法监听，实现点击激活样式，不需要在每个页面都单独调用activeSidebar方法
+   */
+  watch: {
+    $route: {
+      handler: function (val, oldVal) {
+        console.log("--->页面跳转：", val, oldVal);
+        let _this = this;
+        _this.$nextTick(function () {//页面加载完之后执行
+          //通过路由中设置的name查找页面并改变成id格式传入方法
+          _this.activeSidebar(_this.$route.name.replace("/", "-") + "-sidebar");
+        })
+      }
+    }
   },
   methods: {
     login () {
