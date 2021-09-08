@@ -79,7 +79,8 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                aria-hidden="true">&times;</span></button>
             <h4 class="modal-title">新增课程</h4>
           </div>
           <div class="modal-body">
@@ -87,7 +88,7 @@
               <div class="form-group">
                 <label class="col-sm-2 control-label">名称</label>
                 <div class="col-sm-10">
-                  <input  v-model="chapter.name" class="form-control" placeholder="名称">
+                  <input v-model="chapter.name" class="form-control" placeholder="名称">
                 </div>
               </div>
               <div class="form-group">
@@ -110,16 +111,17 @@
 
 <script>
 import Pagination from "@/components/pagination";
+
 export default {
   name: "chapter",
   components: {Pagination},
-  data: function (){
-    return{
-      chapter:{}, //该变量用来绑定form表单的数据
+  data: function () {
+    return {
+      chapter: {}, //该变量用来绑定form表单的数据
       chapters: []
     }
   },
-  mounted: function() {
+  mounted: function () {
     let _this = this;
     _this.$refs.pagination.size = 5;
     _this.list(1);
@@ -127,40 +129,40 @@ export default {
   },
   methods: {
     //新增
-    add(){
+    add() {
       let _this = this;
       _this.chapter = {};
       $("#form-modal").modal("show");
     },
 
     //编辑
-    edit(chapter){
+    edit(chapter) {
       let _this = this;
-      _this.chapter = $.extend({},chapter);
+      _this.chapter = $.extend({}, chapter);
       $("#form-modal").modal("show");
     },
 
     //列表查询
-    list(page){
+    list(page) {
       let _this = this;
-      _this.$ajax.post('http://127.0.0.1:9000/business/admin/chapter/list',{
-        page:page,
-        size:_this.$refs.pagination.size,
-      }).then((response)=>{
+      _this.$ajax.post('http://127.0.0.1:9000/business/admin/chapter/list', {
+        page: page,
+        size: _this.$refs.pagination.size,
+      }).then((response) => {
         console.log("查询大章列表结果：", response);
         let resp = response.data;
-        _this.chapters=resp.content.list;
-        _this.$refs.pagination.render(page,resp.content.total);
+        _this.chapters = resp.content.list;
+        _this.$refs.pagination.render(page, resp.content.total);
       })
     },
 
     //保存
-    save(page){
+    save(page) {
       let _this = this;
-      _this.$ajax.post('http://127.0.0.1:9000/business/admin/chapter/save',_this.chapter).then((response)=>{
+      _this.$ajax.post('http://127.0.0.1:9000/business/admin/chapter/save', _this.chapter).then((response) => {
         console.log("保存新增结果：", response);
         let resp = response.data;
-        if(resp.success){
+        if (resp.success) {
           $("#form-modal").modal("hide");
           _this.list(1);
         }
@@ -170,11 +172,28 @@ export default {
     //删除
     del(id) {
       let _this = this;
-      _this.$ajax.delete('http://127.0.0.1:9000/business/admin/chapter/delete/' + id).then((response) => {
-        console.log("删除结果：", response);
-        let resp = response.data;
-        if (resp.success) {
-          _this.list(1);
+      Swal.fire({
+        title: '确认删除？',
+        text: "删除后不可恢复，确认删除？",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Delete!'
+      }).then((result) => {
+        if (result.value) {
+          _this.$ajax.delete('http://127.0.0.1:9000/business/admin/chapter/delete/' + id).then((response) => {
+            console.log("删除结果：", response);
+            let resp = response.data;
+            if (resp.success) {
+              _this.list(1);
+              Swal.fire(
+                  '删除成功！',
+                  '删除成功！',
+                  'success'
+              )
+            }
+          })
         }
       })
     }
