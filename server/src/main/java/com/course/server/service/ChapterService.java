@@ -9,11 +9,10 @@ import com.course.server.util.CopyUtil;
 import com.course.server.util.UuidUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -57,11 +56,29 @@ public class ChapterService {
      * @param chapterDto 传入新增的chapter实体
      */
     public void save(ChapterDto chapterDto) {
-        chapterDto.setId(UuidUtil.getShortUuid());
-//        Chapter chapter = new Chapter();
-//        BeanUtils.copyProperties(chapterDto, chapter);
         Chapter chapter = CopyUtil.copy(chapterDto, Chapter.class);
+        if(StringUtils.isEmpty(chapterDto.getId())){
+            this.insert(chapter);
+        }else {
+            this.update(chapter);
+        }
+    }
+
+    /**
+     * 新增
+     * @param chapter 传入新增的chapter实体
+     */
+    private void insert(Chapter chapter) {
+        chapter.setId(UuidUtil.getShortUuid());
         chapterMapper.insert(chapter);
+    }
+
+    /**
+     * 更新
+     * @param chapter 传入更新的chapter实体
+     */
+    private void update(Chapter chapter) {
+        chapterMapper.updateByPrimaryKey(chapter);
     }
 
 }
