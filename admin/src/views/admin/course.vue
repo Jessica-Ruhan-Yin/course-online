@@ -11,7 +11,7 @@
       </button>
     </p>
 
-    <pagination ref="pagination" v-bind:list="list"></pagination>
+    <pagination ref="pagination" v-bind:list="list" v-bind:itemCount="8"></pagination>
 
     <div class="row">
       <div v-for="course in courses" class="col-md-4">
@@ -20,13 +20,13 @@
           <img v-show="course.image" class="media-object" v-bind:src="course.image"/>
           <div class="caption">
             <div class="clearfix">
-              <span class="pull-right label label-grey info-label">
+              <span class="pull-right label label-primary info-label">
                 {{ COURSE_LEVEL | optionKV(course.level) }}
               </span>
-              <span class="pull-right label label-grey info-label">
+              <span class="pull-right label label-primary info-label">
                 {{ COURSE_CHARGE | optionKV(course.charge) }}
               </span>
-              <span class="pull-right label label-grey info-label">
+              <span class="pull-right label label-primary info-label">
                 {{ COURSE_STATUS | optionKV(course.status) }}
               </span>
             </div>
@@ -60,8 +60,7 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                aria-hidden="true">&times;</span></button>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <h4 class="modal-title">表单</h4>
           </div>
           <div class="modal-body">
@@ -100,7 +99,7 @@
                 <label class="col-sm-2 control-label">级别</label>
                 <div class="col-sm-10">
                   <select v-model="course.level" class="form-control">
-                    <option v-for="o in level" v-bind:value="o.key">{{ o.value }}</option>
+                    <option v-for="o in COURSE_LEVEL" v-bind:value="o.key">{{o.value}}</option>
                   </select>
                 </div>
               </div>
@@ -108,7 +107,7 @@
                 <label class="col-sm-2 control-label">收费</label>
                 <div class="col-sm-10">
                   <select v-model="course.charge" class="form-control">
-                    <option v-for="o in charge" v-bind:value="o.key">{{ o.value }}</option>
+                    <option v-for="o in COURSE_CHARGE" v-bind:value="o.key">{{o.value}}</option>
                   </select>
                 </div>
               </div>
@@ -116,7 +115,7 @@
                 <label class="col-sm-2 control-label">状态</label>
                 <div class="col-sm-10">
                   <select v-model="course.status" class="form-control">
-                    <option v-for="o in status" v-bind:value="o.key">{{ o.value }}</option>
+                    <option v-for="o in COURSE_STATUS" v-bind:value="o.key">{{o.value}}</option>
                   </select>
                 </div>
               </div>
@@ -130,12 +129,6 @@
                 <label class="col-sm-2 control-label">顺序</label>
                 <div class="col-sm-10">
                   <input v-model="course.sort" class="form-control">
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-sm-2 control-label">讲师</label>
-                <div class="col-sm-10">
-                  <input v-model="course.teacherId" class="form-control">
                 </div>
               </div>
             </form>
