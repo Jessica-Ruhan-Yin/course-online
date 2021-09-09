@@ -31,15 +31,15 @@
 
       <tbody>
       <tr v-for="section in sections">
-          <td>{{ section.id}}</td>
-          <td>{{ section.title}}</td>
-          <td>{{ section.courseId}}</td>
-          <td>{{ section.chapterId}}</td>
-          <td>{{ section.video}}</td>
-          <td>{{ section.time}}</td>
-          <td>{{ section.charge}}</td>
-          <td>{{ section.sort}}</td>
-          <td>{{ section.vod}}</td>
+          <td>{{section.id}}</td>
+          <td>{{section.title}}</td>
+          <td>{{section.courseId}}</td>
+          <td>{{section.chapterId}}</td>
+          <td>{{section.video}}</td>
+          <td>{{section.time}}</td>
+          <td>{{section.charge}}</td>
+          <td>{{section.sort}}</td>
+          <td>{{section.vod}}</td>
 
         <td>
           <div class="hidden-sm hidden-xs btn-group">
@@ -131,7 +131,9 @@
                 <div class="form-group">
                   <label class="col-sm-2 control-label">收费</label>
                   <div class="col-sm-10">
-                    <input v-model="section.charge" class="form-control">
+                    <select v-model="section.charge" class="form-control">
+                      <option v-for="o in CHARGE" v-bind:value="o.key">{{o.value}}</option>
+                    </select>
                   </div>
                 </div>
                 <div class="form-group">
@@ -167,7 +169,8 @@ export default {
   data: function () {
     return {
       section: {}, //该变量用来绑定form表单的数据
-      sections: []
+      sections: [],
+      CHARGE:CHARGE
     }
   },
   mounted: function () {

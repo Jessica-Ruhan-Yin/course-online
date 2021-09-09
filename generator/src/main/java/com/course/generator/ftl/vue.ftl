@@ -29,7 +29,7 @@
       <tr v-for="${domain} in ${domain}s">
         <#list fieldList as field>
             <#if field.nameHump!="createdAt" && field.nameHump!="updatedAt">
-          <td>{{ ${domain}.${field.nameHump}}}</td>
+          <td>{{${domain}.${field.nameHump}}}</td>
             </#if>
         </#list>
 
