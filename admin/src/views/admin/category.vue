@@ -13,11 +13,10 @@
           </button>
         </p>
 
-        <table id="simple-table" class="table  table-bordered table-hover">
+        <table id="level1-table" class="table  table-bordered table-hover">
           <thead>
           <tr>
             <th>id</th>
-            <th>父id</th>
             <th>名称</th>
             <th>顺序</th>
             <th>操作</th>
@@ -25,9 +24,47 @@
           </thead>
 
           <tbody>
-          <tr v-for="category in level1">
+          <tr v-for="category in level1" v-on:click="onClickLevel1(category)"
+              v-bind:class="{'active' : category.id === active.id}">
             <td>{{category.id}}</td>
-            <td>{{category.parent}}</td>
+            <td>{{category.name}}</td>
+            <td>{{category.sort}}</td>
+
+            <td>
+              <div class="hidden-sm hidden-xs btn-group">
+                <button v-on:click="edit(category)" class="btn btn-xs btn-info">
+                  <i class="ace-icon fa fa-pencil bigger-120"></i>
+                </button>
+                <button v-on:click="del(category.id)" class="btn btn-xs btn-danger">
+                  <i class="ace-icon fa fa-trash-o bigger-120"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-md-6">
+        <p>
+          <button v-on:click="add()" class="btn btn-white btn-default btn-round">
+            <i class="ace-icon fa fa-edit"></i>
+            新增
+          </button> &nbsp;
+        </p>
+
+        <table id="level2-table" class="table  table-bordered table-hover">
+          <thead>
+          <tr>
+            <th>id</th>
+            <th>名称</th>
+            <th>顺序</th>
+            <th>操作</th>
+          </tr>
+          </thead>
+
+          <tbody>
+          <tr v-for="category in level2">
+            <td>{{category.id}}</td>
             <td>{{category.name}}</td>
             <td>{{category.sort}}</td>
 
@@ -99,6 +136,7 @@ export default {
       categorys: [],
       level1:[],
       level2:[],
+      active:{},
     }
   },
   mounted: function () {
@@ -187,7 +225,19 @@ export default {
           }
         })
       });
+    },
+
+    onClickLevel1(category){
+      let _this = this;
+      _this.active = category;
+      _this.level2 = category.children;
     }
   }
 }
 </script>
+
+<style scoped>
+  .active td{
+    background-color: #dcecff !important;
+  }
+</style>
