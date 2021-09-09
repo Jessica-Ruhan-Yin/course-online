@@ -41,7 +41,7 @@
               小节
             </button>
             <button v-on:click="edit(chapter)" class="btn btn-white btn-xs btn-info btn-round">
-             编辑
+              编辑
             </button>
             <button v-on:click="del(chapter.id)" class="btn btn-white btn-xs btn-info btn-round">
               删除
@@ -177,7 +177,7 @@ export default {
     },
 
     //点击【小节】
-    toChapter(chapter) {
+    toSection(chapter) {
       let _this = this;
       //点击的时候将数据缓存起来实现两个页面跳转数据共享，可以缓存到session中
       SessionStorage.set("chapter",chapter);

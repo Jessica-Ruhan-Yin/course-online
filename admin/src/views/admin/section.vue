@@ -2,7 +2,7 @@
   <div>
     <h4 class="lighter">
       <i class="ace-icon fa fa-hand-o-right icon-animated-hand-pointer blue"></i>
-      <router-link to="/business/course" class="pink"> {{ course.name }}</router-link>
+      <router-link to="/business/course" class="pink"> {{ course.name }}</router-link>&nbsp;
       <i class="ace-icon fa fa-hand-o-right icon-animated-hand-pointer blue"></i>
       <router-link to="/business/chapter" class="pink"> {{ chapter.name }}</router-link>
     </h4>
@@ -36,15 +36,13 @@
 
       <tbody>
       <tr v-for="section in sections">
-          <td>{{section.id}}</td>
-          <td>{{section.title}}</td>
-          <td>{{section.courseId}}</td>
-          <td>{{section.chapterId}}</td>
-          <td>{{section.video}}</td>
-          <td>{{section.time}}</td>
-          <td>{{SECTION_CHARGE | optionKV(section.charge)}}</td>
-          <td>{{section.sort}}</td>
-          <td>{{section.vod}}</td>
+        <td>{{ section.id }}</td>
+        <td>{{ section.title }}</td>
+        <td>{{ section.video }}</td>
+        <td>{{ section.time }}</td>
+        <td>{{ SECTION_CHARGE | optionKV(section.charge) }}</td>
+        <td>{{ section.sort }}</td>
+        <td>{{ section.vod }}</td>
 
         <td>
           <div class="hidden-sm hidden-xs btn-group">
@@ -70,56 +68,56 @@
           </div>
           <div class="modal-body">
             <form class="form-horizontal">
-                <div class="form-group">
-                  <label class="col-sm-2 control-label">标题</label>
-                  <div class="col-sm-10">
-                    <input v-model="section.title" class="form-control">
-                  </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">标题</label>
+                <div class="col-sm-10">
+                  <input v-model="section.title" class="form-control">
                 </div>
-                <div class="form-group">
-                  <label class="col-sm-2 control-label">课程</label>
-                  <div class="col-sm-10">
-                    <p class="form-control-static">{{course.name}}</p>
-                  </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">课程</label>
+                <div class="col-sm-10">
+                  <p class="form-control-static">{{ course.name }}</p>
                 </div>
-                <div class="form-group">
-                  <label class="col-sm-2 control-label">大章</label>
-                  <div class="col-sm-10">
-                    <p class="form-control-static">{{chapter.name}}</p>
-                  </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">大章</label>
+                <div class="col-sm-10">
+                  <p class="form-control-static">{{ chapter.name }}</p>
                 </div>
-                <div class="form-group">
-                  <label class="col-sm-2 control-label">视频</label>
-                  <div class="col-sm-10">
-                    <input v-model="section.video" class="form-control">
-                  </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">视频</label>
+                <div class="col-sm-10">
+                  <input v-model="section.video" class="form-control">
                 </div>
-                <div class="form-group">
-                  <label class="col-sm-2 control-label">时长</label>
-                  <div class="col-sm-10">
-                    <input v-model="section.time" class="form-control">
-                  </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">时长</label>
+                <div class="col-sm-10">
+                  <input v-model="section.time" class="form-control">
                 </div>
-                <div class="form-group">
-                  <label class="col-sm-2 control-label">收费</label>
-                  <div class="col-sm-10">
-                    <select v-model="section.charge" class="form-control">
-                      <option v-for="o in SECTION_CHARGE" v-bind:value="o.key">{{o.value}}</option>
-                    </select>
-                  </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">收费</label>
+                <div class="col-sm-10">
+                  <select v-model="section.charge" class="form-control">
+                    <option v-for="o in SECTION_CHARGE" v-bind:value="o.key">{{ o.value }}</option>
+                  </select>
                 </div>
-                <div class="form-group">
-                  <label class="col-sm-2 control-label">顺序</label>
-                  <div class="col-sm-10">
-                    <input v-model="section.sort" class="form-control">
-                  </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">顺序</label>
+                <div class="col-sm-10">
+                  <input v-model="section.sort" class="form-control">
                 </div>
-                <div class="form-group">
-                  <label class="col-sm-2 control-label">vod</label>
-                  <div class="col-sm-10">
-                    <input v-model="section.vod" class="form-control">
-                  </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">vod</label>
+                <div class="col-sm-10">
+                  <input v-model="section.vod" class="form-control">
                 </div>
+              </div>
             </form>
           </div>
           <div class="modal-footer">
@@ -143,16 +141,16 @@ export default {
       section: {}, //该变量用来绑定form表单的数据
       sections: [],
       SECTION_CHARGE: SECTION_CHARGE,
-      course:{},
-      chapter:{},
+      course: {},
+      chapter: {},
     }
   },
   mounted: function () {
     let _this = this;
     _this.$refs.pagination.size = 5;
-    let course = sessionStorage.get("course") || {};
-    let chapter = sessionStorage.get("chapter") || {};
-    if(Tool.isEmpty(course)||Tool.isEmpty(chapter)){
+    let course = SessionStorage.get("course") || {};
+    let chapter = SessionStorage.get("chapter") || {};
+    if (Tool.isEmpty(course) || Tool.isEmpty(chapter)) {
       _this.$router.push("/welcome");
     }
     _this.course = course;
@@ -179,10 +177,10 @@ export default {
     list(page) {
       let _this = this;
       _this.$ajax.post('http://127.0.0.1:9000/business/admin/section/list', {
+        courseId: _this.course.id,
+        chapterId: _this.chapter.id,
         page: page,
         size: _this.$refs.pagination.size,
-        courseId: _this.courseId,
-        chapterId:_this.chapterId
       }).then((response) => {
         let resp = response.data;
         _this.sections = resp.content.list;
@@ -196,9 +194,9 @@ export default {
 
       // 保存校验
       if (1 != 1
-        || !Validator.require(_this.section.title, "标题")
-        || !Validator.length(_this.section.title, "标题", 1, 50)
-        || !Validator.length(_this.section.video, "视频", 1, 200)
+          || !Validator.require(_this.section.title, "标题")
+          || !Validator.length(_this.section.title, "标题", 1, 50)
+          || !Validator.length(_this.section.video, "视频", 1, 200)
       ) {
         return;
       }
@@ -222,7 +220,7 @@ export default {
     del(id) {
       let _this = this;
       Confirm.show("删除小节后不可恢复，确认删除？", function () {
-        _this.$ajax.delete('http://127.0.0.1:9000/business/admin/section/delete/' + id).then((response)=>{
+        _this.$ajax.delete('http://127.0.0.1:9000/business/admin/section/delete/' + id).then((response) => {
           let resp = response.data;
           if (resp.success) {
             _this.list(1);
