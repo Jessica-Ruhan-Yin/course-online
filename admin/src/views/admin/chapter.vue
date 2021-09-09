@@ -42,39 +42,6 @@
               <i class="ace-icon fa fa-trash-o bigger-120"></i>
             </button>
           </div>
-          <div class="hidden-md hidden-lg">
-            <div class="inline pos-rel">
-              <button class="btn btn-minier btn-primary dropdown-toggle" data-toggle="dropdown" data-position="auto">
-                <i class="ace-icon fa fa-cog icon-only bigger-110"></i>
-              </button>
-
-              <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
-                <li>
-                  <a href="#" class="tooltip-info" data-rel="tooltip" title="View">
-																			<span class="blue">
-																				<i class="ace-icon fa fa-search-plus bigger-120"></i>
-																			</span>
-                  </a>
-                </li>
-
-                <li>
-                  <a href="#" class="tooltip-success" data-rel="tooltip" title="Edit">
-																			<span class="green">
-																				<i class="ace-icon fa fa-pencil-square-o bigger-120"></i>
-																			</span>
-                  </a>
-                </li>
-
-                <li>
-                  <a href="#" class="tooltip-error" data-rel="tooltip" title="Delete">
-																			<span class="red">
-																				<i class="ace-icon fa fa-trash-o bigger-120"></i>
-																			</span>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div> <!--编辑菜单的响应式-->
         </td>
       </tr>
       </tbody>
@@ -97,9 +64,9 @@
                 </div>
               </div>
               <div class="form-group">
-                <label class="col-sm-2 control-label">课程ID</label>
+                <label class="col-sm-2 control-label">课程</label>
                 <div class="col-sm-10">
-                  <input v-model="chapter.courseId" class="form-control" placeholder="课程ID">
+                  <p class="form-control-static">{{course.name}}</p>
                 </div>
               </div>
             </form>
@@ -159,6 +126,7 @@ export default {
       _this.$ajax.post('http://127.0.0.1:9000/business/admin/chapter/list', {
         page: page,
         size: _this.$refs.pagination.size,
+        courseId:_this.course.id
       }).then((response) => {
         let resp = response.data;
         _this.chapters = resp.content.list;
@@ -172,10 +140,10 @@ export default {
 
       // 保存校验
       if (!Validator.require(_this.chapter.name, "名称")
-          || !Validator.require(_this.chapter.courseId, "课程ID")
           || !Validator.length(_this.chapter.courseId, "课程ID", 1, 8)) {
         return;
       }
+      _this.chapter.courseId = _this.course.id;
 
       _this.$ajax.post('http://127.0.0.1:9000/business/admin/chapter/save', _this.chapter).then((response) => {
         let resp = response.data;
