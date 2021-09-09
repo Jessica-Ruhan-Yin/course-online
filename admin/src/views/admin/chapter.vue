@@ -37,13 +37,13 @@
         <td>{{ chapter.name }}</td>
         <td>
           <div class="hidden-sm hidden-xs btn-group">
-            <button v-on:click="toSection(chapter)" class="btn btn-xs btn-info">
+            <button v-on:click="toSection(chapter)" class="btn btn-white btn-xs btn-info btn-round">
               小节
             </button>
-            <button v-on:click="edit(chapter)" class="btn btn-xs btn-info">
+            <button v-on:click="edit(chapter)" class="btn btn-white btn-xs btn-info btn-round">
              编辑
             </button>
-            <button v-on:click="del(chapter.id)" class="btn btn-xs btn-danger">
+            <button v-on:click="del(chapter.id)" class="btn btn-white btn-xs btn-info btn-round">
               删除
             </button>
           </div>
