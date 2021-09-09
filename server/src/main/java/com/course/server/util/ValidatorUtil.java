@@ -15,7 +15,7 @@ public class ValidatorUtil {
     /**
      * 空校验（null or ""）
      */
-    public static void require(String str, String fieldName) {
+    public static void require(Object str, String fieldName) {
         if (StringUtils.isEmpty(str)) {
             throw new ValidatorException(fieldName + "不能为空");
         }
@@ -25,7 +25,7 @@ public class ValidatorUtil {
      * 长度校验
      */
     public static void length(String str, String fieldName, int min, int max) {
-        if(StringUtils.isEmpty(str)){
+        if (StringUtils.isEmpty(str)) {
             return;
         }
         int length = 0;
@@ -37,4 +37,3 @@ public class ValidatorUtil {
         }
     }
 }
-
