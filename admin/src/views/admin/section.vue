@@ -37,7 +37,7 @@
           <td>{{section.chapterId}}</td>
           <td>{{section.video}}</td>
           <td>{{section.time}}</td>
-          <td>{{section.charge}}</td>
+          <td>{{SECTION_CHARGE | optionKV(section.charge)}}</td>
           <td>{{section.sort}}</td>
           <td>{{section.vod}}</td>
 
@@ -132,7 +132,7 @@
                   <label class="col-sm-2 control-label">收费</label>
                   <div class="col-sm-10">
                     <select v-model="section.charge" class="form-control">
-                      <option v-for="o in CHARGE" v-bind:value="o.key">{{o.value}}</option>
+                      <option v-for="o in SECTION_CHARGE" v-bind:value="o.key">{{o.value}}</option>
                     </select>
                   </div>
                 </div>
@@ -170,7 +170,7 @@ export default {
     return {
       section: {}, //该变量用来绑定form表单的数据
       sections: [],
-      CHARGE:CHARGE
+      SECTION_CHARGE: SECTION_CHARGE,
     }
   },
   mounted: function () {
