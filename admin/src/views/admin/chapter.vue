@@ -1,6 +1,10 @@
 <template>
   <div>
-    <h3>{{course.name}}</h3>
+    <h4 class="lighter">
+      <i class="ace-icon fa fa-hand-o-right icon-animated-hand-pointer blue"></i>
+      <router-link to="/business/course" class="pink"> {{ course.name }}</router-link>
+    </h4>
+    <hr>
     <p>
       <router-link to="/business/course" class="btn btn-white btn-default btn-round">
         <i class="ace-icon fa fa-arrow-left"></i>
@@ -23,7 +27,6 @@
       <tr>
         <th>ID</th>
         <th>名称</th>
-        <th>课程ID</th>
         <th>操作</th>
       </tr>
       </thead>
@@ -32,14 +35,16 @@
       <tr v-for="chapter in chapters">
         <td>{{ chapter.id }}</td>
         <td>{{ chapter.name }}</td>
-        <td>{{ chapter.courseId }}</td>
         <td>
           <div class="hidden-sm hidden-xs btn-group">
+            <button v-on:click="toSection(chapter)" class="btn btn-xs btn-info">
+              小节
+            </button>
             <button v-on:click="edit(chapter)" class="btn btn-xs btn-info">
-              <i class="ace-icon fa fa-pencil bigger-120"></i>
+             编辑
             </button>
             <button v-on:click="del(chapter.id)" class="btn btn-xs btn-danger">
-              <i class="ace-icon fa fa-trash-o bigger-120"></i>
+              删除
             </button>
           </div>
         </td>
@@ -169,7 +174,15 @@ export default {
           }
         })
       });
-    }
+    },
+
+    //点击【小节】
+    toChapter(chapter) {
+      let _this = this;
+      //点击的时候将数据缓存起来实现两个页面跳转数据共享，可以缓存到session中
+      SessionStorage.set("chapter",chapter);
+      _this.$router.push("/business/section");
+    },
   }
 }
 </script>
