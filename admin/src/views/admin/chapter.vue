@@ -102,7 +102,7 @@ export default {
   mounted: function () {
     let _this = this;
     _this.$refs.pagination.size = 5;
-    let course = SessionStorage.get("course") || {};
+    let course = SessionStorage.get(SESSION_KEY_COURSE) || {};
     if(Tool.isEmpty(course)){
       _this.$router.push("/welcome");
     }
@@ -180,7 +180,7 @@ export default {
     toSection(chapter) {
       let _this = this;
       //点击的时候将数据缓存起来实现两个页面跳转数据共享，可以缓存到session中
-      SessionStorage.set("chapter",chapter);
+      SessionStorage.set(SESSION_KEY_CHAPTER,chapter);
       _this.$router.push("/business/section");
     },
   }

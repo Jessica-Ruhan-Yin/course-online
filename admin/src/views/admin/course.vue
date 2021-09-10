@@ -347,7 +347,7 @@ export default {
     toChapter(course) {
       let _this = this;
       //点击的时候将数据缓存起来实现两个页面跳转数据共享，可以缓存到session中
-      SessionStorage.set("course", course);
+      SessionStorage.set(SESSION_KEY_COURSE, course);
       _this.$router.push("/business/chapter");
     },
 
