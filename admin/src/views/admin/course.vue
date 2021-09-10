@@ -67,6 +67,14 @@
             <h4 class="modal-title">表单</h4>
           </div>
           <div class="modal-body">
+            <div class="form-group">
+              <label class="col-sm-2 control-label">
+                分类
+              </label>
+              <div class="col-sm-10">
+                <ul id="tree" class="ztree"></ul>
+              </div>
+            </div>
             <form class="form-horizontal">
               <div class="form-group">
                 <label class="col-sm-2 control-label">名称</label>
@@ -159,11 +167,13 @@ export default {
       COURSE_LEVEL: COURSE_LEVEL,
       COURSE_CHARGE: COURSE_CHARGE,
       COURSE_STATUS: COURSE_STATUS,
+      categorys: [],
     }
   },
   mounted: function () {
     let _this = this;
     _this.$refs.pagination.size = 5;
+    _this.allCategory();
     _this.list(1);
     //this.$parent.activeSidebar("business-course-sidebar")
   },
@@ -239,9 +249,41 @@ export default {
     toChapter(course) {
       let _this = this;
       //点击的时候将数据缓存起来实现两个页面跳转数据共享，可以缓存到session中
-      SessionStorage.set("course",course);
+      SessionStorage.set("course", course);
       _this.$router.push("/business/chapter");
     },
+
+    /**
+     * 分类查询
+     */
+    allCategory() {
+      let _this = this;
+      _this.$ajax.post('http://127.0.0.1:9000/business/admin/category/all').then((response) => {
+        let resp = response.data;
+        _this.categorys = resp.content;
+        _this.initTree();
+      })
+    },
+
+    initTree() {
+      let _this = this;
+      let setting = {
+        check: {
+          enable: true
+        },
+        data: {
+          simpleData: {
+            idKey: "id",
+            pIdKey: "parent",
+            rootPId: "00000000",
+            enable: true
+          }
+        }
+      };
+      let zNodes = _this.categorys;
+
+      $.fn.zTree.init($("#tree"), setting, zNodes);
+    }
   }
 }
 </script>
