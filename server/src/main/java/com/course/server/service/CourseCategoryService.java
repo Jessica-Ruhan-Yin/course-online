@@ -11,6 +11,7 @@ import com.course.server.util.UuidUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
@@ -32,58 +33,70 @@ public class CourseCategoryService {
         PageInfo<CourseCategory> pageInfo = new PageInfo<>(courseCategoryList);
         pageDto.setTotal(pageInfo.getTotal());
         List<CourseCategoryDto> courseCategoryDtoList = CopyUtil.copyList(courseCategoryList, CourseCategoryDto.class);
-            pageDto.setList(courseCategoryDtoList);
-        }
-
-        /**
-         * 保存，id有值时更新，无值时新增
-         */
-        public void save(CourseCategoryDto courseCategoryDto) {
-            CourseCategory courseCategory = CopyUtil.copy(courseCategoryDto, CourseCategory.class);
-            if (StringUtils.isEmpty(courseCategoryDto.getId())) {
-                this.insert(courseCategory);
-            } else {
-                this.update(courseCategory);
-            }
-        }
-
-        /**
-         * 新增
-         */
-        private void insert(CourseCategory courseCategory) {
-
-            courseCategory.setId(UuidUtil.getShortUuid());
-            courseCategoryMapper.insert(courseCategory);
-        }
-
-        /**
-         * 更新
-         */
-        private void update(CourseCategory courseCategory) {
-            courseCategoryMapper.updateByPrimaryKey(courseCategory);
-        }
-
-        /**
-         * 删除
-         */
-        public void delete(String id) {
-            courseCategoryMapper.deleteByPrimaryKey(id);
-        }
+        pageDto.setList(courseCategoryDtoList);
+    }
 
     /**
-     *批量保存
+     * 保存，id有值时更新，无值时新增
      */
-    public void saveBatch(String courseId, List<CategoryDto> dtoList) {
-            CourseCategoryExample example = new CourseCategoryExample();
-            example.createCriteria().andCourseIdEqualTo(courseId);
-            courseCategoryMapper.deleteByExample(example);
-            for (int i = 0, l = dtoList.size(); i < l; i++) {
-                    CategoryDto categoryDto = dtoList.get(i);
-                    CourseCategory courseCategory = new CourseCategory();
-                    courseCategory.setId(UuidUtil.getShortUuid());
-                    courseCategory.setCourseId(courseId);
-                    courseCategory.setCategoryId(categoryDto.getId());
-                    insert(courseCategory);
-                }
+    public void save(CourseCategoryDto courseCategoryDto) {
+        CourseCategory courseCategory = CopyUtil.copy(courseCategoryDto, CourseCategory.class);
+        if (StringUtils.isEmpty(courseCategoryDto.getId())) {
+            this.insert(courseCategory);
+        } else {
+            this.update(courseCategory);
         }
     }
+
+    /**
+     * 新增
+     */
+    private void insert(CourseCategory courseCategory) {
+
+        courseCategory.setId(UuidUtil.getShortUuid());
+        courseCategoryMapper.insert(courseCategory);
+    }
+
+    /**
+     * 更新
+     */
+    private void update(CourseCategory courseCategory) {
+        courseCategoryMapper.updateByPrimaryKey(courseCategory);
+    }
+
+    /**
+     * 删除
+     */
+    public void delete(String id) {
+        courseCategoryMapper.deleteByPrimaryKey(id);
+    }
+
+    /**
+     * 批量保存
+     */
+    @Transactional
+    public void saveBatch(String courseId, List<CategoryDto> dtoList) {
+        CourseCategoryExample example = new CourseCategoryExample();
+        example.createCriteria().andCourseIdEqualTo(courseId);
+        courseCategoryMapper.deleteByExample(example);
+        for (int i = 0, l = dtoList.size(); i < l; i++) {
+            CategoryDto categoryDto = dtoList.get(i);
+            CourseCategory courseCategory = new CourseCategory();
+            courseCategory.setId(UuidUtil.getShortUuid());
+            courseCategory.setCourseId(courseId);
+            courseCategory.setCategoryId(categoryDto.getId());
+            insert(courseCategory);
+        }
+    }
+
+    /**
+     * 查找课程下所有的分类
+     */
+    public List<CourseCategoryDto> listByCourse(String courseId){
+        CourseCategoryExample example = new CourseCategoryExample();
+        example.createCriteria().andCourseIdEqualTo(courseId);
+        List<CourseCategory> courseCategoryList = courseCategoryMapper.selectByExample(example);
+        return CopyUtil.copyList(courseCategoryList,CourseCategoryDto.class);
+    }
+
+}
