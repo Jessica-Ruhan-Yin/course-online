@@ -16,33 +16,31 @@
     <table id="simple-table" class="table  table-bordered table-hover">
       <thead>
       <tr>
-<#list fieldList as field>
-          <#if field.nameHump!="createdAt" && field.nameHump!="updatedAt">
-        <th>${field.nameCn}</th>
-          </#if>
-        </#list>
+        <th>id</th>
+        <th>相对路径</th>
+        <th>文件名</th>
+        <th>后缀</th>
+        <th>大小</th>
+        <th>用途</th>
         <th>操作</th>
       </tr>
       </thead>
 
       <tbody>
-      <tr v-for="${domain} in ${domain}s">
-        <#list fieldList as field>
-            <#if field.nameHump!="createdAt" && field.nameHump!="updatedAt">
-              <#if field.enums>
-        <td>{{${field.enumsConst} | optionKV(${domain}.${field.nameHump})}}</td>
-              <#else>
-        <td>{{${domain}.${field.nameHump}}}</td>
-            </#if>
-          </#if>
-        </#list>
+      <tr v-for="file in files">
+        <td>{{file.id}}</td>
+        <td>{{file.path}}</td>
+        <td>{{file.name}}</td>
+        <td>{{file.suffix}}</td>
+        <td>{{file.size}}</td>
+        <td>{{FILE_USE | optionKV(file.use)}}</td>
 
         <td>
           <div class="hidden-sm hidden-xs btn-group">
-            <button v-on:click="edit(${domain})" class="btn btn-xs btn-info">
+            <button v-on:click="edit(file)" class="btn btn-xs btn-info">
               <i class="ace-icon fa fa-pencil bigger-120"></i>
             </button>
-            <button v-on:click="del(${domain}.id)" class="btn btn-xs btn-danger">
+            <button v-on:click="del(file.id)" class="btn btn-xs btn-danger">
               <i class="ace-icon fa fa-trash-o bigger-120"></i>
             </button>
           </div>
@@ -61,27 +59,38 @@
           </div>
           <div class="modal-body">
             <form class="form-horizontal">
-              <#list fieldList as field>
-                  <#if field.name!="id" && field.nameHump!="createdAt" && field.nameHump!="updatedAt">
-                    <#if field.enums>
                       <div class="form-group">
-                        <label class="col-sm-2 control-label">${field.nameCn}</label>
+                        <label class="col-sm-2 control-label">相对路径</label>
                         <div class="col-sm-10">
-                          <select v-model="${domain}.${field.nameHump}" class="form-control">
-                            <option v-for="o in ${field.enumsConst}" v-bind:value="o.key">{{o.value}}</option>
+                          <input v-model="file.path" class="form-control">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="col-sm-2 control-label">文件名</label>
+                        <div class="col-sm-10">
+                          <input v-model="file.name" class="form-control">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="col-sm-2 control-label">后缀</label>
+                        <div class="col-sm-10">
+                          <input v-model="file.suffix" class="form-control">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="col-sm-2 control-label">大小</label>
+                        <div class="col-sm-10">
+                          <input v-model="file.size" class="form-control">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="col-sm-2 control-label">用途</label>
+                        <div class="col-sm-10">
+                          <select v-model="file.use" class="form-control">
+                            <option v-for="o in FILE_USE" v-bind:value="o.key">{{o.value}}</option>
                           </select>
                         </div>
                       </div>
-                          <#else>
-                      <div class="form-group">
-                        <label class="col-sm-2 control-label">${field.nameCn}</label>
-                        <div class="col-sm-10">
-                          <input v-model="${domain}.${field.nameHump}" class="form-control">
-                        </div>
-                      </div>
-                    </#if>
-                  </#if>
-              </#list>
             </form>
           </div>
           <div class="modal-footer">
@@ -98,49 +107,45 @@
 import Pagination from "@/components/pagination";
 
 export default {
-  name: "${module}-${domain}",
+  name: "file-file",
   components: {Pagination},
   data: function () {
     return {
-      ${domain}: {}, //该变量用来绑定form表单的数据
-      ${domain}s: [],
-      <#list fieldList as field>
-          <#if field.enums>
-      ${field.enumsConst}: ${field.enumsConst},
-          </#if>
-      </#list>
+      file: {}, //该变量用来绑定form表单的数据
+      files: [],
+      FILE_USE: FILE_USE,
     }
   },
   mounted: function () {
     let _this = this;
     _this.$refs.pagination.size = 5;
     _this.list(1);
-    //this.$parent.activeSidebar("${module}-${domain}-sidebar")
+    //this.$parent.activeSidebar("file-file-sidebar")
   },
   methods: {
     //新增
     add() {
       let _this = this;
-      _this.${domain} = {};
+      _this.file = {};
       $("#form-modal").modal("show");
     },
 
     //编辑
-    edit(${domain}) {
+    edit(file) {
       let _this = this;
-      _this.${domain} = $.extend({}, ${domain});
+      _this.file = $.extend({}, file);
       $("#form-modal").modal("show");
     },
 
     //列表查询
     list(page) {
       let _this = this;
-      _this.$ajax.post('http://127.0.0.1:9000/${module}/admin/${domain}/list', {
+      _this.$ajax.post('http://127.0.0.1:9000/file/admin/file/list', {
         page: page,
         size: _this.$refs.pagination.size,
       }).then((response) => {
         let resp = response.data;
-        _this.${domain}s = resp.content.list;
+        _this.files = resp.content.list;
         _this.$refs.pagination.render(page, resp.content.total);
       })
     },
@@ -151,21 +156,15 @@ export default {
 
       // 保存校验
       if (1 != 1
-      <#list fieldList as field>
-        <#if field.name!="id" && field.nameHump!="createdAt" && field.nameHump!="updatedAt" && field.nameHump!="sort">
-          <#if !field.nullAble>
-        || !Validator.require(_this.${domain}.${field.nameHump}, "${field.nameCn}")
-          </#if>
-          <#if (field.length > 0)>
-        || !Validator.length(_this.${domain}.${field.nameHump}, "${field.nameCn}", 1, ${field.length?c})
-          </#if>
-        </#if>
-      </#list>
+        || !Validator.require(_this.file.path, "相对路径")
+        || !Validator.length(_this.file.path, "相对路径", 1, 100)
+        || !Validator.length(_this.file.name, "文件名", 1, 100)
+        || !Validator.length(_this.file.suffix, "后缀", 1, 10)
       ) {
         return;
       }
 
-      _this.$ajax.post('http://127.0.0.1:9000/${module}/admin/${domain}/save', _this.${domain}).then((response) => {
+      _this.$ajax.post('http://127.0.0.1:9000/file/admin/file/save', _this.file).then((response) => {
         let resp = response.data;
         if (resp.success) {
           $("#form-modal").modal("hide");
@@ -180,8 +179,8 @@ export default {
     //删除
     del(id) {
       let _this = this;
-      Confirm.show("删除${tableNameCn}后不可恢复，确认删除？", function () {
-        _this.$ajax.delete('http://127.0.0.1:9000/${module}/admin/${domain}/delete/' + id).then((response)=>{
+      Confirm.show("删除文件后不可恢复，确认删除？", function () {
+        _this.$ajax.delete('http://127.0.0.1:9000/file/admin/file/delete/' + id).then((response)=>{
           let resp = response.data;
           if (resp.success) {
             _this.list(1);
