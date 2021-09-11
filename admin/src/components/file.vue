@@ -18,6 +18,9 @@ export default {
     inputId: {
       default: "file-upload",
     },
+    suffixs:{
+      default:[]
+    },
     use:{
       default:""
     },
@@ -39,7 +42,7 @@ export default {
       let file = _this.$refs.file.files[0];
 
       //判断文件格式：file后缀的判断
-      let suffixs = ["jpg", "jepg", "png"];
+      let suffixs = _this.suffixs;
       let fileName = file.name;
       let suffix = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length).toLowerCase();
       let validateSuffix = false;
