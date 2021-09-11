@@ -4,12 +4,12 @@
  * @param key 例如：C
  * @returns {string} 例如：收费
  */
-let optionKV = (object, key) =>  {
+let optionKV = (object, key) => {
     if (!object || !key) {
         return "";
     } else {
         let result = "";
-        for(let enums in object){
+        for (let enums in object) {
             if (key === object[enums]["key"]) {
                 result = object[enums]["value"];
             }
@@ -23,7 +23,7 @@ let optionKV = (object, key) =>  {
  * @param key 例如：C
  * @returns {string} 例如：收费
  */
-let optionKVArray = (list, key) =>  {
+let optionKVArray = (list, key) => {
     if (!list || !key) {
         return "";
     } else {
@@ -73,7 +73,24 @@ function PrefixInteger(num, length) {
     return (Array(length).join('0') + num).slice(-length);
 }
 
+/**
+ * 格式化文件大小
+ * @param value
+ * @returns {string}
+ */
+let formatFileSize = (value) => {
+    value = value || 0;
+    let result;
+    if (value > 100 * 1024) {
+        result = Math.round((value / 1024 / 1024) * 100) / 100 + "MB";
+    } else {
+        result = Math.round((value / 1024) * 100) / 100 + "KB";
+    }
+    return result;
+};
+
 export default {
     optionKV,
-    formatSecond
+    formatSecond,
+    formatFileSize
 }
