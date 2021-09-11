@@ -18,7 +18,8 @@
           <span class="profile-picture">
             <img v-show="!teacher.image" class="editable img-responsive editable-click editable-empty"
                  src="/ace/assets/images/avatars/profile-pic.jpg" v-bind:title="teacher.intro"/>
-            <img v-show="teacher.image" class="editable img-responsive editable-click editable-empty" v-bind:src="teacher.image" v-bind:title="teacher.intro"/>
+            <img v-show="teacher.image" class="editable img-responsive editable-click editable-empty"
+                 v-bind:src="teacher.image" v-bind:title="teacher.intro"/>
           </span>
 
           <div class="space-4"></div>
@@ -86,6 +87,11 @@
                         v-bind:text="'上传头像'"
                         v-bind:suffixs="['jpg', 'jpeg', 'png']"
                         v-bind:after-upload="afterUpload"></file>
+                  <div v-show="teacher.image" class="row">
+                    <div class="col-md-4">
+                      <img v-bind:src="teacher.image" class="img-responsive">
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="form-group">
@@ -208,7 +214,7 @@ export default {
       });
     },
 
-    afterUpload(resp){
+    afterUpload(resp) {
       let _this = this;
       let image = resp.content;
       _this.teacher.image = image;
