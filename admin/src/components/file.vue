@@ -1,0 +1,75 @@
+<template>
+  <div>
+    <button type="button" v-on:click="selectFile()" class="btn btn-white btn-default btn-round">
+      <i class="ace-icon fa fa-upload"></i>
+      {{ text }}
+    </button>
+    <input class="hidden" type="file" ref="file" v-on:change="uploadFile()" v-bind:id="inputId+'-input'">
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'file',
+  props: {
+    text: {
+      default: "上传文件",
+    },
+    inputId: {
+      default: "file-upload",
+    },
+    afterUpload: {
+      type: Function,
+      default: null
+    },
+    itemCount: Number // 显示的页码数，比如总共有100页，只显示10页，其它用省略号表示
+  },
+  data: function () {
+    return {}
+  },
+  methods: {
+    //上传头像
+    uploadFile() {
+      let _this = this;
+      let formData = new window.FormData();
+
+      let file = _this.$refs.file.files[0];
+
+      //判断文件格式：file后缀的判断
+      let suffixs = ["jpg", "jepg", "png"];
+      let fileName = file.name;
+      let suffix = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length).toLowerCase();
+      let validateSuffix = false;
+      for (let i = 0; i < suffixs.length; i++) {
+        if (suffixs[i].toLowerCase() === suffix) {
+          validateSuffix = true;
+          break;
+        }
+      }
+      if (!validateSuffix) {
+        Toast.warning("头像格式不正确！只支持上传：" + suffixs.join(", "));
+        $("#" + _this.inputId + "-input").val("");
+        return;
+      }
+
+
+      // key："file"必须和后端controller参数名一致
+      formData.append('file', file);
+      _this.$ajax.post('http://127.0.0.1:9000/file/admin/upload', formData).then((response) => {
+        let resp = response.data;
+        console.log("上传文件成功：", resp);
+        _this.afterUpload(resp);
+
+        //解决不能连续上传同一文件的bug 清空原有值
+        $("#" + _this.inputId + "-input").val("");
+      });
+    },
+
+    //选择头像
+    selectFile() {
+      $("#file-upload-input").trigger("click");
+    }
+  }
+}
+</script>
+
