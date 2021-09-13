@@ -41,7 +41,7 @@ public class FileService {
     public void save(FileDto fileDto) {
         File file = CopyUtil.copy(fileDto, File.class);
         File fileDb = selectByKey(fileDto.getKey());
-        if (fileDb==null) {
+        if (fileDb == null) {
             this.insert(file);
         } else {
             fileDb.setShardIndex(fileDto.getShardIndex());
@@ -88,6 +88,13 @@ public class FileService {
         } else {
             return fileList.get(0);
         }
+    }
+
+    /**
+     * 根据文件标识查找数据库记录
+     */
+    public FileDto findByKey(String key) {
+        return CopyUtil.copy(selectByKey(key), FileDto.class);
     }
 
 }
