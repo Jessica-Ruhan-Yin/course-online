@@ -40,6 +40,8 @@ public class FileDto {
 
     private String key;
 
+    private String shard;
+
     public String getId() {
         return id;
     }
@@ -104,6 +106,14 @@ public class FileDto {
         this.updatedAt = updatedAt;
     }
 
+    public String getShard() {
+        return shard;
+    }
+
+    public void setShard(String shard) {
+        this.shard = shard;
+    }
+
     public Integer getShardIndex() {
         return shardIndex;
     }
@@ -151,6 +161,7 @@ public class FileDto {
         sb.append(", shardSize=").append(shardSize);
         sb.append(", shardTotal=").append(shardTotal);
         sb.append(", key='").append(key).append('\'');
+        sb.append(", shard='").append(shard).append('\'');
         sb.append('}');
         return sb.toString();
     }
