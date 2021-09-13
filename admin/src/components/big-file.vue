@@ -76,6 +76,7 @@ export default {
 
         //解决不能连续上传同一文件的bug 清空原有值
         $("#" + _this.inputId + "-input").val("");
+        _this.afterUpload(resp);
       });
     },
 

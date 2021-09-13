@@ -244,7 +244,7 @@ export default {
     afterUpload(resp) {
       let _this = this;
       let video = resp.content.path;
-      _this.section.video = video;
+      _this.$set(_this.section, 'video', video);
       _this.getTime();
       this.$forceUpdate()
     },
