@@ -103,6 +103,14 @@ public class VodUtil {
         return client.getAcsResponse(request);
     }
 
+    /**
+     * 获得播放凭证
+     */
+    public static GetVideoPlayAuthResponse getVideoPlayAuth(DefaultAcsClient client, String videoId) throws Exception {
+        GetVideoPlayAuthRequest request = new GetVideoPlayAuthRequest();
+        request.setVideoId(videoId);
+        return client.getAcsResponse(request);
+    }
 
     public static void main(String[] argv) {
         //您的AccessKeyId
