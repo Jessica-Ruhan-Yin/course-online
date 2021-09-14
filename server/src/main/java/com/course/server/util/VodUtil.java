@@ -1,18 +1,17 @@
 package com.course.server.util;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.aliyun.oss.OSSClient;
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.http.FormatType;
 import com.aliyuncs.profile.DefaultProfile;
-import com.aliyuncs.vod.model.v20170321.CreateUploadVideoRequest;
-import com.aliyuncs.vod.model.v20170321.CreateUploadVideoResponse;
-import com.aliyuncs.vod.model.v20170321.RefreshUploadVideoRequest;
-import com.aliyuncs.vod.model.v20170321.RefreshUploadVideoResponse;
+import com.aliyuncs.vod.model.v20170321.*;
 import org.apache.commons.codec.binary.Base64;
 
 import java.io.File;
+import java.io.InputStream;
 
 /**
  * @Description
@@ -24,11 +23,6 @@ public class VodUtil {
 
     /**
      * 使用AK初始化VOD客户端
-     *
-     * @param accessKeyId
-     * @param accessKeySecret
-     * @return
-     * @throws ClientException
      */
     public static DefaultAcsClient initVodClient(String accessKeyId, String accessKeySecret) throws ClientException {
         // 点播服务接入区域，国内请填cn-shanghai，其他区域请参考文档[点播中心](~~98194~~)
@@ -41,22 +35,14 @@ public class VodUtil {
     /**
      * 获取视频上传地址和凭证
      *
-     * @param vodClient
-     * @return
      * @throws ClientException
      */
-    public static CreateUploadVideoResponse createUploadVideo(DefaultAcsClient vodClient) throws ClientException, ClientException {
+    public static CreateUploadVideoResponse createUploadVideo(DefaultAcsClient vodClient, String fileName) throws ClientException, ClientException {
         CreateUploadVideoRequest request = new CreateUploadVideoRequest();
-        request.setFileName("vod_test.mp4");
-        request.setTitle("this is title");
-        //request.setDescription("this is desc");
-        //request.setTags("tag1,tag2");
-        request.setCoverURL("http://vod.aliyun.com/test_cover_url.jpg");
+        request.setFileName(fileName);
+        request.setTitle(fileName);
         request.setCateId(1000339221L);
         request.setTemplateGroupId("40c08bc95213cfbd3f2f14f7326d83f6");
-        //request.setWorkflowId("");
-        //request.setStorageLocation("");
-        //request.setAppId("app-1000000");
         //设置请求超时时间
         request.setSysReadTimeout(1000);
         request.setSysConnectTimeout(1000);
@@ -65,10 +51,6 @@ public class VodUtil {
 
     /**
      * 使用上传凭证和地址初始化OSS客户端（注意需要先Base64解码并Json Decode再传入）
-     *
-     * @param uploadAuth
-     * @param uploadAddress
-     * @return
      */
     public static OSSClient initOssClient(JSONObject uploadAuth, JSONObject uploadAddress) {
         String endpoint = uploadAddress.getString("Endpoint");
@@ -79,11 +61,16 @@ public class VodUtil {
     }
 
     /**
+     * 简单上传
+     */
+    public static void uploadLocalFile(OSSClient ossClient, JSONObject uploadAddress, InputStream inputStream) {
+        String bucketName = uploadAddress.getString("Bucket");
+        String objectName = uploadAddress.getString("FileName");
+        ossClient.putObject(bucketName, objectName, inputStream);
+    }
+
+    /**
      * 上传本地文件
-     *
-     * @param ossClient
-     * @param uploadAddress
-     * @param localFile
      */
     public static void uploadLocalFile(OSSClient ossClient, JSONObject uploadAddress, String localFile) {
         String bucketName = uploadAddress.getString("Bucket");
@@ -94,10 +81,6 @@ public class VodUtil {
 
     /**
      * 刷新上传凭证
-     *
-     * @param vodClient
-     * @return
-     * @throws ClientException
      */
     public static RefreshUploadVideoResponse refreshUploadVideo(DefaultAcsClient vodClient) throws ClientException {
         RefreshUploadVideoRequest request = new RefreshUploadVideoRequest();
@@ -109,6 +92,18 @@ public class VodUtil {
         return vodClient.getAcsResponse(request);
     }
 
+    /**
+     * 获取源文件信息
+     */
+    public static GetMezzanineInfoResponse getMezzanineInfo(DefaultAcsClient client, String videoId) throws Exception {
+        GetMezzanineInfoRequest request = new GetMezzanineInfoRequest();
+        request.setVideoId(videoId);
+        //源片下载地址过期时间
+        request.setAuthTimeout(3600L);
+        return client.getAcsResponse(request);
+    }
+
+
     public static void main(String[] argv) {
         //您的AccessKeyId
         String accessKeyId = "LTAI5tC6xVqJt9i46YFMHmy7";
@@ -119,7 +114,8 @@ public class VodUtil {
         try {
             // 初始化VOD客户端并获取上传地址和凭证
             DefaultAcsClient vodClient = initVodClient(accessKeyId, accessKeySecret);
-            CreateUploadVideoResponse createUploadVideoResponse = createUploadVideo(vodClient);
+            String fileName = "test.mp4";
+            CreateUploadVideoResponse createUploadVideoResponse = createUploadVideo(vodClient,fileName);
             // 执行成功会返回VideoId、UploadAddress和UploadAuth
             String videoId = createUploadVideoResponse.getVideoId();
             JSONObject uploadAuth = JSONObject.parseObject(
@@ -131,6 +127,9 @@ public class VodUtil {
             // 上传文件，注意是同步上传会阻塞等待，耗时与文件大小和网络上行带宽有关
             uploadLocalFile(ossClient, uploadAddress, localFile);
             System.out.println("上传视频成功, VideoId : " + videoId);
+            GetMezzanineInfoResponse response = new GetMezzanineInfoResponse();
+            response = getMezzanineInfo(vodClient, videoId);
+            System.out.println("获取视频信息, response : " + JSON.toJSONString(response));
         } catch (Exception e) {
             System.out.println("上传视频失败, ErrorMessage : " + e.getLocalizedMessage());
         }

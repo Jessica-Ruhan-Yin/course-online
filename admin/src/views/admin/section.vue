@@ -90,10 +90,10 @@
                 <label class="col-sm-2 control-label">视频</label>
                 <div class="col-sm-10">
                   <vod v-bind:input-id="'video-upload'"
-                            v-bind:text="'上传VOD'"
-                            v-bind:suffixs="['mp4']"
-                            v-bind:use="FILE_USE.COURSE.key"
-                            v-bind:after-upload="afterUpload"></vod>
+                       v-bind:text="'上传VOD'"
+                       v-bind:suffixs="['mp4']"
+                       v-bind:use="FILE_USE.COURSE.key"
+                       v-bind:after-upload="afterUpload"></vod>
                   <div v-show="section.video" class="row">
                     <div class="col-md-9">
                       <video v-bind:src="section.video" id="video" controls="controls"></video>
@@ -210,6 +210,7 @@ export default {
     save(page) {
       let _this = this;
 
+      _this.section.video = "";
       // 保存校验
       if (1 != 1
           || !Validator.require(_this.section.title, "标题")
@@ -251,7 +252,9 @@ export default {
     afterUpload(resp) {
       let _this = this;
       let video = resp.content.path;
+      let vod = resp.content.vod;
       _this.$set(_this.section, 'video', video);
+      _this.section.vod = vod;
       _this.getTime();
       this.$forceUpdate()
     },
@@ -261,10 +264,11 @@ export default {
      */
     getTime() {
       let _this = this;
-      setTimeout(function (){
+      setTimeout(function () {
         let ele = document.getElementById("video");
+        console.log(ele);
         _this.section.time = parseInt(ele.duration, 10);
-      },100);
+      }, 1000);
     },
 
   }

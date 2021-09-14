@@ -34,19 +34,19 @@ public class OssController {
 
     private static final Logger LOG = LoggerFactory.getLogger(FileController.class);
 
-    @Value("${accessKeyId}")
+    @Value("${oss.accessKeyId}")
     private String accessKeyId;
 
-    @Value("${accessKeySecret}")
+    @Value("${oss.accessKeySecret}")
     private String accessKeySecret;
 
-    @Value("${endpoint}")
+    @Value("${oss.endpoint}")
     private String endpoint;
 
-    @Value("${bucket}")
+    @Value("${oss.bucket}")
     private String bucket;
 
-    @Value("${ossDomain}")
+    @Value("${oss.domain}")
     private String ossDomain;
 
     public static final String BUSINESS_NAME = "文件上传";
@@ -119,7 +119,7 @@ public class OssController {
         String fileName = file.getOriginalFilename();
         String suffix = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
         String dir = useEnum.name().toLowerCase();
-        String path = "/" + dir + "/" + key + "." + suffix;
+        String path = dir + "/" + key + "." + suffix;
 
         // 创建OSSClient实例。
         OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
@@ -134,8 +134,6 @@ public class OssController {
         ResponseDto responseDto = new ResponseDto();
         FileDto fileDto = new FileDto();
         fileDto.setPath(ossDomain + path);
-        LOG.info("----------------------------------------{}",fileDto.getPath());
-        // http://ssica-imooc-course.oss-cn-shenzhen.aliyuncs.com/teacher/3koMca4hhmSiyq4MG0qE4A.jpg
         responseDto.setContent(fileDto);
 
         return responseDto;
