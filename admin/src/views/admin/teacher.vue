@@ -128,10 +128,11 @@
 <script>
 import Pagination from "@/components/pagination";
 import BigFile from "@/components/big-file";
+import File from "@/components/file";
 
 export default {
   name: "business-teacher",
-  components: {BigFile, Pagination},
+  components: {BigFile, Pagination, File},
   data: function () {
     return {
       teacher: {}, //该变量用来绑定form表单的数据

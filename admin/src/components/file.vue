@@ -62,7 +62,7 @@ export default {
       // key："file"必须和后端controller参数名一致
       formData.append('file', file);
       formData.append('use', _this.use);
-      _this.$ajax.post('http://127.0.0.1:9000/file/admin/upload', formData).then((response) => {
+      _this.$ajax.post('http://127.0.0.1:9000/file/admin/oss-simple', formData).then((response) => {
         let resp = response.data;
         console.log("上传文件成功：", resp);
         _this.afterUpload(resp);
