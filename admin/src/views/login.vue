@@ -44,7 +44,7 @@
 
                         <div class="clearfix">
                           <label class="inline">
-                            <input type="checkbox" class="ace"/>
+                            <input type="checkbox" v-model="remember" class="ace"/>
                             <span class="lbl">记住我</span>
                           </label>
 
@@ -80,22 +80,39 @@ export default {
   data: function () {
     return {
       user: {}, //该变量用来绑定form表单的数据
+      remember: true,
     }
   },
   mounted: function () {
+    let _this = this;
     $('body').attr('class', 'login-layout light-login');
     $('body').removeClass('no-skin');
+    let rememberUser = LocalStorage.get(LOCAL_KEY_REMEMBER_USER);
+    if (rememberUser) {
+      _this.user = rememberUser;
+    }
   },
   methods: {
     //登录
     login() {
       let _this = this;
+      let passwordShow = _this.user.password;
       _this.user.password = hex_md5(_this.user.password + KEY); //md5加密密码
       _this.$ajax.post('http://127.0.0.1:9000/system/admin/user/login', _this.user).then((response) => {
         let resp = response.data;
         if (resp.success) {
           console.log("登陆成功：", resp.content);
+          let loginUser = resp.content;
           Tool.setLoginUser(resp.content);
+          if (_this.remember) {
+            LocalStorage.set(LOCAL_KEY_REMEMBER_USER, {
+              loginName: loginUser.loginName,
+              password: passwordShow
+            })
+          } else {
+            LocalStorage.set(LOCAL_KEY_REMEMBER_USER, null);
+          }
+
           this.$router.push("/welcome")
         } else {
           Toast.warning(resp.message)

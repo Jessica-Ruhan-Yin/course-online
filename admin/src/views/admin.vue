@@ -532,7 +532,7 @@ export default {
 
     $.getScript('/ace/assets/js/ace.min.js');
 
-    _this.loginUser = SessionStorage.get("USER");
+    _this.loginUser = Tool.getLoginUser();
   },
   /**
    * 通过该方法监听，实现点击激活样式，不需要在每个页面都单独调用activeSidebar方法
