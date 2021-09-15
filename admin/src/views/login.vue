@@ -28,14 +28,14 @@
                       <fieldset>
                         <label class="block clearfix">
                           <span class="block input-icon input-icon-right">
-                            <input type="text" class="form-control" placeholder="Username"/>
+                            <input v-model="user.loginName" type="text" class="form-control" placeholder="用户名"/>
                             <i class="ace-icon fa fa-user"></i>
                           </span>
                         </label>
 
                         <label class="block clearfix">
                           <span class="block input-icon input-icon-right">
-                            <input type="password" class="form-control" placeholder="Password"/>
+                            <input type="password" v-model="user.password" class="form-control" placeholder="密码"/>
                             <i class="ace-icon fa fa-lock"></i>
                           </span>
                         </label>
@@ -77,14 +77,30 @@
 
 export default {
   name: 'login',
-  mounted:function () {
-    $('body').attr('class','login-layout light-login');
+  data: function () {
+    return {
+      user: {}, //该变量用来绑定form表单的数据
+    }
+  },
+  mounted: function () {
+    $('body').attr('class', 'login-layout light-login');
     $('body').removeClass('no-skin');
   },
   methods: {
+    //登录
     login() {
-      this.$router.push("/welcome")
-    }
+      let _this = this;
+      _this.user.password = hex_md5(_this.user.password + KEY); //md5加密密码
+      _this.$ajax.post('http://127.0.0.1:9000/system/admin/user/login', _this.user).then((response) => {
+        let resp = response.data;
+        if (resp.success) {
+          console.log(resp.content);
+          this.$router.push("/welcome")
+        } else {
+          Toast.warning(resp.message)
+        }
+      });
+    },
   }
 }
 </script>
