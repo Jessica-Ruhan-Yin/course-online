@@ -283,7 +283,7 @@
                 <img class="nav-user-photo" src="../../public/ace/assets/images/avatars/user.jpg" alt="Jason's Photo" />
                 <span class="user-info">
 									<small>Welcome,</small>
-									Jason
+									{{ loginUser.name }}
 								</span>
 
                 <i class="ace-icon fa fa-caret-down"></i>
@@ -511,6 +511,11 @@
 <script>
 export default {
   name: "admin",
+  data: function () {
+    return {
+     loginUser:{},
+    }
+  },
   mounted: function() {
     let _this = this;
     $("body").removeClass("login-layout light-login");
@@ -520,6 +525,8 @@ export default {
     _this.activeSidebar(_this.$route.name.replace("/", "-") + "-sidebar");
 
     $.getScript('/ace/assets/js/ace.min.js');
+
+    _this.loginUser = SessionStorage.get("USER");
     },
   /**
    * 通过该方法监听，实现点击激活样式，不需要在每个页面都单独调用activeSidebar方法

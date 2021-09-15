@@ -94,7 +94,8 @@ export default {
       _this.$ajax.post('http://127.0.0.1:9000/system/admin/user/login', _this.user).then((response) => {
         let resp = response.data;
         if (resp.success) {
-          console.log(resp.content);
+          console.log("登陆成功：", resp.content);
+          Tool.setLoginUser(resp.content);
           this.$router.push("/welcome")
         } else {
           Toast.warning(resp.message)
