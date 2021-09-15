@@ -518,7 +518,9 @@ export default {
     // console.log("admin");
     //初始化的时候sidebar激活方法不会被监听，需要手动加载
     _this.activeSidebar(_this.$route.name.replace("/", "-") + "-sidebar");
-  },
+
+    $.getScript('/ace/assets/js/ace.min.js');
+    },
   /**
    * 通过该方法监听，实现点击激活样式，不需要在每个页面都单独调用activeSidebar方法
    */
