@@ -43,7 +43,7 @@
                         <label class="block clearfix">
                           <span class="block input-icon input-icon-right">
                            <div class="input-group">
-                             <input type="text" class="form-control" placeholder="验证码">
+                             <input type="text"  v-model="user.imageCode"  class="form-control" placeholder="验证码">
                              <span class="input-group-addon" id="basic-addon2">
                                <img v-on:click="loadImageCode()" id="image-code" alt="验证码"/>
                              </span>
@@ -92,6 +92,7 @@ export default {
     return {
       user: {}, //该变量用来绑定form表单的数据
       remember: true, // 默认勾选记住我
+      imageCodeToken: ""
     }
   },
   mounted: function () {
@@ -118,6 +119,8 @@ export default {
         _this.user.password = hex_md5(_this.user.password + KEY); //md5加密密码
       }
 
+     // _this.user.imageCodeToken = _this.imageCodeToken;
+
       _this.$ajax.post('http://127.0.0.1:9000/system/admin/user/login', _this.user).then((response) => {
         let resp = response.data;
         if (resp.success) {
@@ -143,7 +146,8 @@ export default {
 
           this.$router.push("/welcome")
         } else {
-          Toast.warning(resp.message)
+          Toast.warning(resp.message);
+          //_this.loadImageCode();
         }
       });
     },
