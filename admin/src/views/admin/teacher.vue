@@ -13,7 +13,7 @@
 
     <pagination ref="pagination" v-bind:list="list"></pagination>
     <div class="row">
-      <div v-for="teacher in teachers" class="col-md-3 center">
+      <div v-for="teacher in teachers" class="col-md-3 center-block">
         <div>
           <span class="profile-picture">
             <img v-show="!teacher.image" class="editable img-responsive editable-click editable-empty"
