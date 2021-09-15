@@ -40,6 +40,17 @@
                           </span>
                         </label>
 
+                        <label class="block clearfix">
+                          <span class="block input-icon input-icon-right">
+                           <div class="input-group">
+                             <input type="text" class="form-control" placeholder="验证码">
+                             <span class="input-group-addon" id="basic-addon2">
+                               <img v-on:click="loadImageCode()" id="image-code" alt="验证码"/>
+                             </span>
+                           </div>
+                         </span>
+                        </label>
+
                         <div class="space"></div>
 
                         <div class="clearfix">
@@ -93,6 +104,8 @@ export default {
     if (rememberUser) {
       _this.user = rememberUser;
     }
+    // 初始时加载一次验证码图片
+    _this.loadImageCode();
   },
   methods: {
     //登录
@@ -101,7 +114,7 @@ export default {
 
       let md5 = hex_md5(_this.user.password);
       let rememberUser = LocalStorage.get(LOCAL_KEY_REMEMBER_USER) || {};
-      if(md5 !== rememberUser.md5){
+      if (md5 !== rememberUser.md5) {
         _this.user.password = hex_md5(_this.user.password + KEY); //md5加密密码
       }
 
@@ -134,6 +147,21 @@ export default {
         }
       });
     },
+
+    /**
+     * 加载图形验证码
+     */
+    loadImageCode: function () {
+      let _this = this;
+      _this.imageCodeToken = Tool.uuid(8);
+      $('#image-code').attr('src', 'http://127.0.0.1:9000/system/admin/kaptcha/image-code/' + _this.imageCodeToken);
+    },
   }
 }
 </script>
+
+<style scoped>
+.input-group-addon {
+  padding: 0;
+}
+</style>
