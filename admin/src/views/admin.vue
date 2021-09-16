@@ -576,7 +576,7 @@ export default {
 
     logout() {
       let _this = this;
-      _this.$ajax.get('http://127.0.0.1:9000/system/admin/user/logout').then((response) => {
+      _this.$ajax.get('http://127.0.0.1:9000/system/admin/user/logout/'+_this.loginUser.token).then((response) => {
         let resp = response.data;
         if (resp.success) {
           Tool.setLoginUser(null);
