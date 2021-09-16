@@ -119,7 +119,7 @@ export default {
         _this.user.password = hex_md5(_this.user.password + KEY); //md5加密密码
       }
 
-     // _this.user.imageCodeToken = _this.imageCodeToken;
+      _this.user.imageCodeToken = _this.imageCodeToken;
 
       _this.$ajax.post('http://127.0.0.1:9000/system/admin/user/login', _this.user).then((response) => {
         let resp = response.data;
@@ -147,7 +147,7 @@ export default {
           this.$router.push("/welcome")
         } else {
           Toast.warning(resp.message);
-          //_this.loadImageCode();
+          _this.loadImageCode();
         }
       });
     },
