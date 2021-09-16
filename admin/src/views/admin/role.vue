@@ -25,9 +25,9 @@
 
       <tbody>
       <tr v-for="role in roles">
-        <td>{{role.id}}</td>
-        <td>{{role.name}}</td>
-        <td>{{role.desc}}</td>
+        <td>{{ role.id }}</td>
+        <td>{{ role.name }}</td>
+        <td>{{ role.desc }}</td>
 
         <td>
           <div class="hidden-sm hidden-xs btn-group">
@@ -56,18 +56,18 @@
           </div>
           <div class="modal-body">
             <form class="form-horizontal">
-                      <div class="form-group">
-                        <label class="col-sm-2 control-label">角色</label>
-                        <div class="col-sm-10">
-                          <input v-model="role.name" class="form-control">
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <label class="col-sm-2 control-label">描述</label>
-                        <div class="col-sm-10">
-                          <input v-model="role.desc" class="form-control">
-                        </div>
-                      </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">角色</label>
+                <div class="col-sm-10">
+                  <input v-model="role.name" class="form-control">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">描述</label>
+                <div class="col-sm-10">
+                  <input v-model="role.desc" class="form-control">
+                </div>
+              </div>
             </form>
           </div>
           <div class="modal-footer">
@@ -115,8 +115,8 @@ export default {
     return {
       role: {}, //该变量用来绑定form表单的数据
       roles: [],
-      resources:[],
-      zTree:{},
+      resources: [],
+      zTree: {},
     }
   },
   mounted: function () {
@@ -159,10 +159,10 @@ export default {
 
       // 保存校验
       if (1 != 1
-        || !Validator.require(_this.role.name, "角色")
-        || !Validator.length(_this.role.name, "角色", 1, 50)
-        || !Validator.require(_this.role.desc, "描述")
-        || !Validator.length(_this.role.desc, "描述", 1, 100)
+          || !Validator.require(_this.role.name, "角色")
+          || !Validator.length(_this.role.name, "角色", 1, 50)
+          || !Validator.require(_this.role.desc, "描述")
+          || !Validator.length(_this.role.desc, "描述", 1, 100)
       ) {
         return;
       }
@@ -183,7 +183,7 @@ export default {
     del(id) {
       let _this = this;
       Confirm.show("删除角色后不可恢复，确认删除？", function () {
-        _this.$ajax.delete('http://127.0.0.1:9000/system/admin/role/delete/' + id).then((response)=>{
+        _this.$ajax.delete('http://127.0.0.1:9000/system/admin/role/delete/' + id).then((response) => {
           let resp = response.data;
           if (resp.success) {
             _this.list(1);
@@ -219,21 +219,48 @@ export default {
     initTree() {
       let _this = this;
       let setting = {
-        check:{
-          enable:true
+        check: {
+          enable: true
         },
-        data:{
-          simpleData:{
-            idKey:"id",
-            pIdKey:"parent",
-            rootPId:"",
-            enable:true
+        data: {
+          simpleData: {
+            idKey: "id",
+            pIdKey: "parent",
+            rootPId: "",
+            enable: true
           }
         }
       };
 
-      _this.zTree = $.fn.zTree.init($("#tree"),setting,_this.resources);
+      _this.zTree = $.fn.zTree.init($("#tree"), setting, _this.resources);
       _this.zTree.expandAll(true);
+    },
+
+    /**
+     * 资源模态框点击【保存】
+     */
+    saveResource() {
+      let _this = this;
+      let resources = _this.zTree.getCheckedNodes();
+      console.log("勾选的资源：", resources);
+
+      //保存时，只要保存资源id，所以使用id数组进行参数传递
+      let resourceIds = [];
+      for (let i = 0; i < resources.length; i++) {
+        resourceIds.push(resources[i].id);
+      }
+
+      _this.$ajax.post('http://127.0.0.1:9000/system/admin/role/save-resource', {
+        id: _this.role.id,
+        resourceIds: resourceIds
+      }).then((response) => {
+        let resp = response.data;
+        if (resp.success) {
+          Toast.success("保存成功!");
+        } else {
+          Toast.warning(resp.message);
+        }
+      });
     },
   }
 }
