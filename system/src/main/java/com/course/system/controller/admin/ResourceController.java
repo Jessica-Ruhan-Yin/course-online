@@ -1,12 +1,14 @@
 package com.course.system.controller.admin;
 
 import com.course.server.dto.PageDto;
+import com.course.server.dto.ResourceDto;
 import com.course.server.dto.ResponseDto;
 import com.course.server.service.ResourceService;
 import com.course.server.util.ValidatorUtil;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Description
@@ -48,4 +50,17 @@ public class ResourceController {
         resourceService.delete(id);
         return responseDto;
     }
+
+
+    /*
+    资源树查询
+     */
+    @GetMapping("/load-tree")
+    public ResponseDto loadTree(){
+        ResponseDto responseDto = new ResponseDto();
+        List<ResourceDto> responseDtoList = resourceService.loadTree();
+        responseDto.setContent(responseDtoList);
+        return responseDto;
+    }
+
 }
