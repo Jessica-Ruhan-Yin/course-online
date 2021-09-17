@@ -31,6 +31,9 @@
 
         <td>
           <div class="hidden-sm hidden-xs btn-group">
+            <button v-on:click="editUser(role)" class="btn btn-xs btn-white">
+              <i class="ace-icon fa fa-user bigger-120"></i>
+            </button>
             <button v-on:click="editResource(role)" class="btn btn-xs btn-grey">
               <i class="ace-icon fa fa-list bigger-120"></i>
             </button>
@@ -102,6 +105,54 @@
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+
+    <div id="user-modal" class="modal fade" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">角色用户关联配置</h4>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-6">
+                <table id="user-table" class="table table-hover">
+                  <tbody>
+                  <tr v-for="user in users">
+                    <td>{{ user.loginName }}</td>
+                    <td class="text-right">
+                      <a href="javascript:;" class="">
+                        <i class="ace-icon fa fa-arrow-circle-right blue"></i>
+                      </a>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="col-md-6">
+                <table id="role-user-table" class="table table-hover">
+                  <tbody>
+                  <tr v-for="user in roleUsers">
+                    <td>{{ user.loginName }}</td>
+                    <td class="text-right">
+                      <a href="javascript:;" class="">
+                        <i class="ace-icon fa fa-trash blue"></i>
+                      </a>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            <button v-on:click="save()" type="button" class="btn btn-primary">保存</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
   </div>
 </template>
 
@@ -117,6 +168,8 @@ export default {
       roles: [],
       resources: [],
       zTree: {},
+      users:[],
+      roleUsers:[],
     }
   },
   mounted: function () {
@@ -126,21 +179,27 @@ export default {
     //this.$parent.activeSidebar("system-role-sidebar")
   },
   methods: {
-    //新增
+    /**
+     * 新增
+     */
     add() {
       let _this = this;
       _this.role = {};
       $("#form-modal").modal("show");
     },
 
-    //编辑
+    /**
+     * 编辑
+     */
     edit(role) {
       let _this = this;
       _this.role = $.extend({}, role);
       $("#form-modal").modal("show");
     },
 
-    //列表查询
+    /**
+     * 列表查询
+     */
     list(page) {
       let _this = this;
       _this.$ajax.post('http://127.0.0.1:9000/system/admin/role/list', {
@@ -153,7 +212,9 @@ export default {
       })
     },
 
-    //保存
+    /**
+     * 保存
+     */
     save() {
       let _this = this;
 
@@ -179,7 +240,9 @@ export default {
       })
     },
 
-    //删除
+    /**
+     * 删除
+     */
     del(id) {
       let _this = this;
       Confirm.show("删除角色后不可恢复，确认删除？", function () {
@@ -193,7 +256,9 @@ export default {
       });
     },
 
-    //编辑
+    /**
+     * 编辑资源
+     */
     editResource(role) {
       let _this = this;
       _this.role = $.extend({}, role);
@@ -216,7 +281,9 @@ export default {
     },
 
 
-    //初始化资源树
+    /**
+     * 初始化资源树
+     */
     initTree() {
       let _this = this;
       let setting = {
@@ -267,19 +334,48 @@ export default {
     /**
      * 加载角色资源关联记录
      */
-    listRoleResource(){
+    listRoleResource() {
       let _this = this;
-      _this.$ajax.get('http://127.0.0.1:9000/system/admin/role/list-resource/'+ _this.role.id).then((response)=>{
+      _this.$ajax.get('http://127.0.0.1:9000/system/admin/role/list-resource/' + _this.role.id).then((response) => {
         let resp = response.data;
         let resources = resp.content;
 
         //勾选查询到的资源：先把树所有节点清空勾选，再勾选查询到的节点
         _this.zTree.checkAllNodes(false);
         for (let i = 0; i < resources.length; i++) {
-          let node = _this.zTree.getNodeByParam("id",resources[i]);
-          _this.zTree.checkNode(node,true);
+          let node = _this.zTree.getNodeByParam("id", resources[i]);
+          _this.zTree.checkNode(node, true);
         }
       });
+    },
+
+    /**
+     * 点击用户
+     */
+    editUser(role){
+      let _this = this;
+      _this.role = $.extend({},role);
+      _this.listUser();
+      $("#user-modal").modal("show");
+    },
+
+    /**
+     * 查询所有用户
+     */
+    listUser(){
+      let _this = this;
+      _this.$ajax.post('http://127.0.0.1:9000/system/admin/user/list',{
+        page:1,
+        size:9999
+      }).then((response)=>{
+        let resp = response.data;
+        if(resp.success){
+          _this.users = resp.content.list;
+          console.log(_this.users);
+        }else {
+          Toast.warning(resp.message);
+        }
+      })
     },
   }
 }
