@@ -94,4 +94,16 @@ public class RoleController {
         responseDto.setContent(roleDto);
         return responseDto;
     }
+
+    /**
+     * 加载已关联的用户
+     */
+    @GetMapping("/list-user/{roleId}")
+    public ResponseDto listUser(@PathVariable String roleId){
+        LOG.info("加载用户开始");
+        ResponseDto responseDto = new ResponseDto();
+        List<String> userIdList = roleService.listUser(roleId);
+        responseDto.setContent(userIdList);
+        return responseDto;
+    }
 }
