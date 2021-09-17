@@ -122,7 +122,7 @@
                   <tr v-for="user in users">
                     <td>{{ user.loginName }}</td>
                     <td class="text-right">
-                      <a href="javascript:;" class="">
+                      <a v-on:click="addUser(user)" href="javascript:;" class="">
                         <i class="ace-icon fa fa-arrow-circle-right blue"></i>
                       </a>
                     </td>
@@ -136,7 +136,7 @@
                   <tr v-for="user in roleUsers">
                     <td>{{ user.loginName }}</td>
                     <td class="text-right">
-                      <a href="javascript:;" class="">
+                      <a v-on:click="deleteUser(user)" href="javascript:;" class="">
                         <i class="ace-icon fa fa-trash blue"></i>
                       </a>
                     </td>
@@ -147,8 +147,14 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-            <button v-on:click="save()" type="button" class="btn btn-primary">保存</button>
+            <button type="button" class="btn btn-white btn-default btn-round" data-dismiss="modal">
+              <i class="ace-icon fa fa-times"/>
+              取消
+            </button>
+            <button type="button" class="btn btn-white btn-info btn-round" v-on:click="saveUser()">
+              <i class="ace-icon fa fa-plus blue"/>
+              保存
+            </button>
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
@@ -168,8 +174,8 @@ export default {
       roles: [],
       resources: [],
       zTree: {},
-      users:[],
-      roleUsers:[],
+      users: [],
+      roleUsers: [],
     }
   },
   mounted: function () {
@@ -352,9 +358,9 @@ export default {
     /**
      * 点击用户
      */
-    editUser(role){
+    editUser(role) {
       let _this = this;
-      _this.role = $.extend({},role);
+      _this.role = $.extend({}, role);
       _this.listUser();
       $("#user-modal").modal("show");
     },
@@ -362,17 +368,67 @@ export default {
     /**
      * 查询所有用户
      */
-    listUser(){
+    listUser() {
       let _this = this;
-      _this.$ajax.post('http://127.0.0.1:9000/system/admin/user/list',{
-        page:1,
-        size:9999
-      }).then((response)=>{
+      _this.$ajax.post('http://127.0.0.1:9000/system/admin/user/list', {
+        page: 1,
+        size: 9999
+      }).then((response) => {
         let resp = response.data;
-        if(resp.success){
+        if (resp.success) {
           _this.users = resp.content.list;
           console.log(_this.users);
-        }else {
+        } else {
+          Toast.warning(resp.message);
+        }
+      })
+    },
+
+    /**
+     * 角色中增加用户
+     */
+    addUser(user) {
+      let _this = this;
+
+      //如果当前要添加的用户在右边列表中已经有了，则不用再添加
+      let users = _this.roleUsers;
+      for (let i = 0; i < users.length; i++) {
+        if (user === user[i]) {
+          return;
+        }
+      }
+      _this.roleUsers.push(user);
+    },
+
+    /**
+     * 角色中删除用户
+     */
+    deleteUser(user) {
+      let _this = this;
+      Tool.removeObj(_this.roleUsers, user);
+    },
+
+    /**
+     * 角色用户模态框点击保存
+     */
+    saveUser() {
+      let _this = this;
+      let users = _this.roleUsers;
+
+      //保存时，只需要保存用户id，所以使用id数组进行参数传递
+      let userIds = [];
+      for (let i = 0; i < users.length; i++) {
+        userIds.push(users[i].id);
+      }
+      _this.$ajax.post('http://127.0.0.1:9000/system/admin/role/save-user', {
+        id: _this.role.id,
+        userIds: userIds,
+      }).then((response) => {
+        console.log("保存角色用户结果：", response);
+        let resp = response.data;
+        if (resp.success) {
+          Toast.success("保存成功！")
+        } else {
           Toast.warning(resp.message);
         }
       })
