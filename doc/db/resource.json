@@ -73,7 +73,7 @@
         "children": [
           {
             "id": "020101",
-            "name": "增册改查",
+            "name": "增删改查",
             "request": [
               "/business/admin/category"
             ]
@@ -87,7 +87,7 @@
         "children": [
           {
             "id": "020201",
-            "name": "增册改查",
+            "name": "增删改查",
             "request": [
               "/business/admin/course",
               "/business/admin/category/all"
@@ -102,7 +102,7 @@
         "children": [
           {
             "id": "020301",
-            "name": "增册改查",
+            "name": "增删改查",
             "request": [
               "/business/admin/teacher"
             ]
