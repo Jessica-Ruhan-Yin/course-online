@@ -6,9 +6,7 @@ import com.course.server.dto.ResponseDto;
 import com.course.server.service.CourseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -34,7 +32,7 @@ public class CourseController {
      * 列表查询，查询最新的三门已发布的课程
      */
     @GetMapping("/list-new")
-    public ResponseDto listNew(){
+    public ResponseDto listNew() {
         PageDto pageDto = new PageDto();
         pageDto.setPage(1);
         pageDto.setSize(3);
@@ -43,4 +41,16 @@ public class CourseController {
         responseDto.setContent(courseDtoList);
         return responseDto;
     }
+
+    /**
+     * 列表查询，查询所有课程
+     */
+    @PostMapping("/list")
+    public ResponseDto list(@RequestBody PageDto pageDto) {
+        ResponseDto responseDto = new ResponseDto();
+        courseService.list(pageDto);
+        responseDto.setContent(pageDto);
+        return responseDto;
+    }
+
 }

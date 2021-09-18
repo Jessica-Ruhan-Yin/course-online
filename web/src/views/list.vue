@@ -34,8 +34,19 @@ export default {
     /**
      * 查询课程列表
      */
-    listCourse() {
+    listCourse(page) {
       let _this = this;
+      _this.$ajax.post("http://127.0.0.1:9000/business/web/course/list", {
+        page: page,
+        size: 3,
+      }).then((response) => {
+        let resp = response.data;
+        if (resp.success) {
+          _this.courses = resp.content.list;
+        }
+      }).catch((response) => {
+        console.log("error:", response);
+      })
     },
 
   }
