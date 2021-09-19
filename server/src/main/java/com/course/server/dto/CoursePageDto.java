@@ -10,6 +10,8 @@ public class CoursePageDto extends PageDto{
 
     private String Status;
 
+    private String categoryId;
+
     public String getStatus() {
         return Status;
     }
@@ -18,10 +20,19 @@ public class CoursePageDto extends PageDto{
         Status = status;
     }
 
+    public String getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("CoursePageDto{");
         sb.append("Status='").append(Status).append('\'');
+        sb.append(", categoryId='").append(categoryId).append('\'');
         sb.append(", page=").append(page);
         sb.append(", size=").append(size);
         sb.append(", total=").append(total);
