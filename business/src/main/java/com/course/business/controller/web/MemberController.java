@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.course.server.dto.LoginMemberDto;
 import com.course.server.dto.MemberDto;
 import com.course.server.dto.ResponseDto;
-import com.course.server.dto.MemberDto;
 import com.course.server.service.MemberService;
 import com.course.server.util.UuidUtil;
 import com.course.server.util.ValidatorUtil;
@@ -13,10 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -92,9 +88,20 @@ public class MemberController {
         LoginMemberDto loginMemberDto = memberService.login(memberDto);
         String token = UuidUtil.getShortUuid();
         loginMemberDto.setToken(token);
-        redisTemplate.opsForValue().set(token, JSON.toJSONString(loginMemberDto),3600, TimeUnit.SECONDS);
+        redisTemplate.opsForValue().set(token, JSON.toJSONString(loginMemberDto), 3600, TimeUnit.SECONDS);
 
         responseDto.setContent(loginMemberDto);
+        return responseDto;
+    }
+
+    /**
+     * 退出登录
+     */
+    @GetMapping("/logout/{token}")
+    public ResponseDto logout(@PathVariable String token) {
+        ResponseDto responseDto = new ResponseDto();
+        redisTemplate.delete(token);
+        LOG.info("从redis中删除token：{}", token);
         return responseDto;
     }
 }

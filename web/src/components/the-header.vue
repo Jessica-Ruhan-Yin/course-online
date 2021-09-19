@@ -4,7 +4,7 @@
       <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
           <a class="navbar-brand" href="#">
-            <router-link class="nav-link" style="color: white" to="/" >
+            <router-link class="nav-link" style="color: white" to="/">
               <i class="ace-icon fa fa-video-camera"></i>&nbsp;Ssica课程
             </router-link>
           </a>
@@ -34,8 +34,13 @@
                 </div>
               </li>
             </ul>
-            <span v-show="loginMember.id" class="text-white pr-3">您好：{{loginMember.name}}</span>
-            <button v-on:click="openLoginModal()" class="btn btn-outline-light my-2 my-sm-0" type="submit">登录/注册</button>
+            <span v-show="loginMember.id" class="text-white pr-3">您好：{{ loginMember.name }}</span>
+            <button v-show="!loginMember.id" v-on:click="openLoginModal()" class="btn btn-outline-light my-2 my-sm-0"
+                    type="submit">登录/注册
+            </button>
+            <button v-show="loginMember.id" v-on:click="logout()" class="btn btn-outline-light my-2 my-sm-0"
+                    type="submit">退出登录
+            </button>
           </div>
         </div>
       </nav>
@@ -47,12 +52,13 @@
 
 <script>
 import TheLogin from "@/components/login";
+
 export default {
   name: "the-header",
   components: {TheLogin},
-  data:function (){
-    return{
-      loginMember:{}
+  data: function () {
+    return {
+      loginMember: {}
     }
   },
 
@@ -61,7 +67,7 @@ export default {
     _this.loginMember = Tool.getLoginMember();
   },
 
-  methods:{
+  methods: {
     /**
      * 打开登录注册窗口
      */
@@ -70,10 +76,27 @@ export default {
       _this.$refs.loginComponent.openLoginModal();
     },
 
-    setLoginMember(loginMember){
+    setLoginMember(loginMember) {
       let _this = this;
       _this.loginMember = loginMember;
-    }
+    },
+
+    /**
+     * 退出登录
+     */
+    logout() {
+      let _this = this;
+      _this.$ajax.get('http://127.0.0.1:9000/business/web/member/logout/' + _this.loginMember.token).then((response) => {
+        let resp = response.data;
+        if (resp.success) {
+          Tool.setLoginMember(null);
+          _this.loginMember = {};
+          Toast.success("退出登录成功");
+        } else {
+          Toast.warning(resp.message);
+        }
+      });
+    },
   }
 }
 </script>
