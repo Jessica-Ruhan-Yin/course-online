@@ -29,14 +29,15 @@ public class ChapterService {
 
     /**
      * 查询
+     *
      * @param chapterPageDto 传入的是分页实体
-     * 包含了前端传入的page和size，同时将后端查询的total和list放入该实体中
+     *                       包含了前端传入的page和size，同时将后端查询的total和list放入该实体中
      */
     public void list(ChapterPageDto chapterPageDto) {
-        PageHelper.startPage(chapterPageDto.getPage(),chapterPageDto.getSize());
+        PageHelper.startPage(chapterPageDto.getPage(), chapterPageDto.getSize());
         ChapterExample chapterExample = new ChapterExample();
         ChapterExample.Criteria criteria = chapterExample.createCriteria();
-        if(!StringUtils.isEmpty(chapterPageDto.getCourseId())) {
+        if (!StringUtils.isEmpty(chapterPageDto.getCourseId())) {
             criteria.andCourseIdEqualTo(chapterPageDto.getCourseId());
         }
         List<Chapter> chapterList = chapterMapper.selectByExample(chapterExample);
@@ -48,19 +49,21 @@ public class ChapterService {
 
     /**
      * 保存
+     *
      * @param chapterDto 传入新增的chapter实体
      */
     public void save(ChapterDto chapterDto) {
         Chapter chapter = CopyUtil.copy(chapterDto, Chapter.class);
-        if(StringUtils.isEmpty(chapterDto.getId())){
+        if (StringUtils.isEmpty(chapterDto.getId())) {
             this.insert(chapter);
-        }else {
+        } else {
             this.update(chapter);
         }
     }
 
     /**
      * 新增
+     *
      * @param chapter 传入新增的chapter实体
      */
     private void insert(Chapter chapter) {
@@ -70,6 +73,7 @@ public class ChapterService {
 
     /**
      * 更新
+     *
      * @param chapter 传入更新的chapter实体
      */
     private void update(Chapter chapter) {
@@ -78,10 +82,20 @@ public class ChapterService {
 
     /**
      * 删除
+     *
      * @param id 传入更新的chapter实体
      */
     public void delete(String id) {
         chapterMapper.deleteByPrimaryKey(id);
     }
 
+    /**
+     * 查询某一课程下的所有大章
+     */
+    public List<ChapterDto> listByCourse(String id){
+        ChapterExample example = new ChapterExample();
+        example.createCriteria().andCourseIdEqualTo(id);
+        List<Chapter> chapterList = chapterMapper.selectByExample(example);
+        return CopyUtil.copyList(chapterList,ChapterDto.class);
+    }
 }

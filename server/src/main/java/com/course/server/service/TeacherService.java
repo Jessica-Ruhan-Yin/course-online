@@ -74,4 +74,12 @@ public class TeacherService {
         List<Teacher> teacherList = teacherMapper.selectByExample(teacherExample);
         return CopyUtil.copyList(teacherList, TeacherDto.class);
     }
+
+    /**
+     * 按照课程id查找讲师信息
+     */
+    public TeacherDto findById(String id){
+        Teacher teacher = teacherMapper.selectByPrimaryKey(id);
+        return CopyUtil.copy(teacher,TeacherDto.class);
+    }
 }
