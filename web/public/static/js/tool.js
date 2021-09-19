@@ -25,6 +25,31 @@ Tool = {
     },
 
     /**
+     * 时间格式化，date为空时取当前时间
+     */
+    dateFormat: function (format, date) {
+        let result;
+        if (!date) {
+            date = new Date();
+        }
+        const option = {
+            "y+": date.getFullYear().toString(),        // 年
+            "M+": (date.getMonth() + 1).toString(),     // 月
+            "d+": date.getDate().toString(),            // 日
+            "h+": date.getHours().toString(),           // 时
+            "m+": date.getMinutes().toString(),         // 分
+            "s+": date.getSeconds().toString()          // 秒
+        };
+        for (let i in option) {
+            result = new RegExp("(" + i + ")").exec(format);
+            if (result) {
+                format = format.replace(result[1], (result[1].length == 1) ? (option[i]) : (option[i].padStart(result[1].length, "0")))
+            }
+        }
+        return format;
+    },
+
+    /**
      * 移除对象数组中的对象
      * @param array
      * @param obj
@@ -61,18 +86,17 @@ Tool = {
     },
 
     /**
-     * 保存登录信息
-     * @param loginUser
+     * 保存登录用户信息
      */
-    setLoginUser: function (loginUser) {
-        SessionStorage.set(SESSION_KEY_LOGIN_USER, loginUser);
+    setLoginMember: function (loginMember) {
+        SessionStorage.set(SESSION_KEY_LOGIN_MEMBER, loginMember);
     },
 
     /**
-     * 获取登录信息
+     * 获取登录用户信息
      */
-    getLoginUser: function () {
-        return SessionStorage.get(SESSION_KEY_LOGIN_USER) || {};
+    getLoginMember: function () {
+        return SessionStorage.get(SESSION_KEY_LOGIN_MEMBER) || {};
     },
 
     /**
@@ -89,23 +113,6 @@ Tool = {
             uuid[i] = chars[0 | Math.random() * radix];
         }
         return uuid.join('');
-    },
-
-    /**
-     * 查找是否有权限
-     */
-    hasResource: function (id) {
-        let _this = this;
-        let resources = _this.getLoginUser().resources;
-        if (_this.isEmpty(resources)) {
-            return false;
-        }
-        for (let i = 0; i < resources.length; i++) {
-            if (id === resources[i].id) {
-                return true;
-            }
-        }
-        return false;
     },
 
     /**
