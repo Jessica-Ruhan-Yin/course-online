@@ -99,6 +99,7 @@
 <script>
 
 import ModalPlayer from "@/components/modal-player";
+
 export default {
   name: "detail",
   components: {ModalPlayer},
@@ -141,6 +142,8 @@ export default {
               c.sections.push(s);
             }
           }
+
+          Tool.sortAsc(c.sections, "sort");
         }
       })
     },
@@ -149,7 +152,7 @@ export default {
      * 展开/收缩一个章节
      * @param chapter
      */
-    doFolded (chapter, i) {
+    doFolded(chapter, i) {
       let _this = this;
       chapter.folded = !chapter.folded;
       // 在v-for里写v-show，只修改属性不起作用，需要$set
@@ -159,9 +162,13 @@ export default {
     /**
      * 播放视频
      */
-    play(section){
+    play(section) {
       let _this = this;
-      _this.$refs.modalPlayer.playVod(section.vod);
+      if(section.charge === _this.SECTION_CHARGE.CHARGE.key){
+        Toast.warning("请先登录！")
+      }else{
+        _this.$refs.modalPlayer.playVod(section.vod);
+      }
     },
   }
 }
