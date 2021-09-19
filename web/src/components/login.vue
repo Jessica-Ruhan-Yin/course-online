@@ -28,7 +28,7 @@
             <div class="form-group">
               <div class="checkbox">
                 <label>
-                  <input type="checkbox" class=" rememberMe" v-model="rememberMe"> 记住密码
+                  <input type="checkbox" class=" remember" v-model="remember"> 记住密码
                 </label>
                 <div class="pull-right">
                   <a href="javascript:;" v-on:click="toForgetDiv()">忘记密码</a>&nbsp;
@@ -130,11 +130,11 @@ export default {
       STATUS_FORGET: "STATUS_FORGET",
       MODAL_STATUS: "",
 
-      member:{},
-      memberForget:{},
-      memberRegister:{},
+      member: {},
+      memberForget: {},
+      memberRegister: {},
 
-      rememberMe: true, // 记住密码
+      remember: true, // 记住密码
       imageCodeToken: "",
     }
   },
@@ -149,19 +149,21 @@ export default {
      */
     openLoginModal() {
       let _this = this;
+      //显示登陆框时就刷新一次验证码图片
+      _this.loadImageCode();
       $("#login-modal").modal("show");
     },
 
     //------------------登录框、注册框、忘记密码切换------------------
-    toLoginDiv(){
+    toLoginDiv() {
       let _this = this;
       _this.MODAL_STATUS = _this.STATUS_LOGIN;
     },
-    toRegisterDiv(){
+    toRegisterDiv() {
       let _this = this;
       _this.MODAL_STATUS = _this.STATUS_REGISTER;
     },
-    toForgetDiv(){
+    toForgetDiv() {
       let _this = this;
       _this.MODAL_STATUS = _this.STATUS_FORGET;
     },
@@ -179,6 +181,16 @@ export default {
           Toast.warning(resp.message);
         }
       })
+    },
+
+    //----------登录框----------
+    /**
+     * 加载图片验证码
+     */
+    loadImageCode() {
+      let _this = this;
+      _this.imageCodeToken = Tool.uuid(8);
+      $('#image-code').attr('src', 'http://127.0.0.1:9000/business/web/kaptcha/image-code/' + _this.imageCodeToken);
     },
 
   }
@@ -201,7 +213,7 @@ export default {
   max-width: 400px;
 }
 
-#login-modal input:not(.rememberMe){
+#login-modal input:not(.remember) {
   height: 45px;
   font-size: 16px;
 }
@@ -213,6 +225,10 @@ export default {
 
 #login-modal .to-login-div {
   text-align: center;
+}
+
+#image-code{
+  height: 45px;
 }
 </style>
 
