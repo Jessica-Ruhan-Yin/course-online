@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
  * @Date 2021/9/9
  */
 public class EnumGenerator {
-    static String path = "admin" +
+    static String path = "web" +
             "\\public\\static\\js\\enums.js";
 
     public static void main(String[] args) {

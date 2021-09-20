@@ -159,7 +159,7 @@ export default {
 
       //从缓存中获取记住的用户名密码，如果获取不到，说明上一次没有登录
       let rememberMember = LocalStorage.get(LOCAL_KEY_REMEMBER_MEMBER);
-      if(rememberMember){
+      if (rememberMember) {
         _this.member = rememberMember;
       }
 
@@ -222,7 +222,7 @@ export default {
             // 这里保存密码密文，并保存密文md5，用于检测密码是否被重新输入过
             let md5 = hex_md5(_this.member.password);
             LocalStorage.set(LOCAL_KEY_REMEMBER_MEMBER, {
-              mobile:loginMember.mobile,
+              mobile: loginMember.mobile,
               password: _this.member.password,
               md5: md5
             });
@@ -254,6 +254,35 @@ export default {
       $('#image-code').attr('src', 'http://127.0.0.1:9000/business/web/kaptcha/image-code/' + _this.imageCodeToken);
     },
 
+    /**
+     * 发送注册短信
+     */
+    sendSmsForRegister() {
+      let _this = this;
+      let sms = {
+        mobile: _this.memberRegister.mobile,
+        use: SMS_USE.REGISTER.key
+      };
+
+      _this.sendSmsCode(sms);
+    },
+
+    /**
+     * 发送短信
+     */
+    sendSmsCode(sms) {
+      let _this = this;
+
+      //调用服务端发送短信接口
+      _this.$ajax.post('http://127.0.0.1:9000/business/web/sms/send', sms).then((response) => {
+        let resp = response.data;
+        if (resp.success) {
+          Toast.success("短信已发送");
+        } else {
+          Toast.warning(resp.message);
+        }
+      })
+    },
   }
 }
 </script>
@@ -288,7 +317,7 @@ export default {
   text-align: center;
 }
 
-#image-code{
+#image-code {
   height: 45px;
 }
 </style>
