@@ -17,8 +17,10 @@
             <p class="course-head-price">
               <span class="price-now text-danger"><i class="fa fa-yen"></i>&nbsp;{{ course.price }}&nbsp;&nbsp;&nbsp;&nbsp;</span>
               <span class="course-head-button-links">
-              <a class="btn btn-lg btn-primary btn-shadow smaller" href="javascript:;">立即报名</a>
-            </span>
+              <a v-show="!memberCourse.id" v-on:click="enroll()" class="btn btn-lg btn-primary btn-shadow smaller"
+                 href="javascript:;">立即报名</a>
+              <a v-show="memberCourse.id" href="#" class="btn btn-lg btn-success btn-shadow disabled">已报名</a>
+              </span>
             </p>
           </div>
         </div>
@@ -99,6 +101,7 @@
 <script>
 
 import ModalPlayer from "@/components/modal-player";
+import login from "@/components/login";
 
 export default {
   name: "detail",
@@ -110,6 +113,7 @@ export default {
       teacher: {},
       chapters: [],
       sections: [],
+      memberCourse: {},
       COURSE_LEVEL: COURSE_LEVEL,
       SECTION_CHARGE: SECTION_CHARGE
     }
@@ -164,11 +168,35 @@ export default {
      */
     play(section) {
       let _this = this;
-      if(section.charge === _this.SECTION_CHARGE.CHARGE.key){
+      if (section.charge === _this.SECTION_CHARGE.CHARGE.key) {
         Toast.warning("请先登录！")
-      }else{
+      } else {
         _this.$refs.modalPlayer.playVod(section.vod);
       }
+    },
+
+    /**
+     * 报名
+     */
+    enroll() {
+      let _this = this;
+      let loginMember = Tool.getLoginMember();
+      if (Tool.isEmpty(loginMember)) {
+        Toast.warning("请先登录");
+        return;
+      }
+      _this.$ajax.post('http://127.0.0.1:9000/business/web/member-course/enroll', {
+        courseId: _this.course.id,
+        memberId: loginMember.id
+      }).then((response) => {
+        let resp = response.data;
+        if (resp.success) {
+          _this.memberCourse = resp.content;
+          Toast.success("报名成功！");
+        } else {
+          Toast.warning(resp.message);
+        }
+      });
     },
   }
 }
