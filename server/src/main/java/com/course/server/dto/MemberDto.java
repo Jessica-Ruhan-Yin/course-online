@@ -27,6 +27,9 @@ public class MemberDto {
     //图片验证码token
     private String imageCodeToken;
 
+    //短信验证码
+    private String smsCode;
+
      //注册时间
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date registerTime;
@@ -95,6 +98,14 @@ public class MemberDto {
         this.imageCodeToken = imageCodeToken;
     }
 
+    public String getSmsCode() {
+        return smsCode;
+    }
+
+    public void setSmsCode(String smsCode) {
+        this.smsCode = smsCode;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("MemberDto{");
@@ -105,6 +116,7 @@ public class MemberDto {
         sb.append(", photo='").append(photo).append('\'');
         sb.append(", imageCode='").append(imageCode).append('\'');
         sb.append(", imageCodeToken='").append(imageCodeToken).append('\'');
+        sb.append(", smsCode='").append(smsCode).append('\'');
         sb.append(", registerTime=").append(registerTime);
         sb.append('}');
         return sb.toString();
