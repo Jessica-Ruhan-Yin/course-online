@@ -42,4 +42,15 @@ public class MemberCourseController {
         responseDto.setContent(memberCourseDto);
         return responseDto;
     }
+
+    /**
+     * 获取报名信息
+     */
+    @PostMapping("/get-enroll")
+    public ResponseDto getEnroll(@RequestBody MemberCourseDto memberCourseDto){
+        ResponseDto responseDto = new ResponseDto();
+        memberCourseDto = memberCourseService.getEnroll(memberCourseDto);
+        responseDto.setContent(memberCourseDto);
+        return responseDto;
+    }
 }
