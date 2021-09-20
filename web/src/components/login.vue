@@ -232,8 +232,30 @@ export default {
       _this.MODAL_STATUS = _this.STATUS_FORGET;
     },
 
+    /**
+     * 注册
+     */
     register() {
       let _this = this;
+
+      //提交之前，先校验所有输入框
+      //注意：当有一个文本框校验为false时，其它不校验
+      let validateResult1 = _this.onRegisterMobileBlur();
+      let validateResult2 = _this.onRegisterMobileCodeBlur();
+      let validateResult3 = _this.onRegisterNameBlur();
+      let validateResult4 = _this.onRegisterPasswordBlur();
+      let validateResult5 = _this.onRegisterConfirmPasswordBlur();
+
+      let validateResult = validateResult1 &&
+          validateResult2 &&
+          validateResult3 &&
+          validateResult4 &&
+          validateResult5;
+
+      if (!validateResult) {
+        return;
+      }
+
       _this.memberRegister.password = hex_md5(_this.memberRegister.passwordOriginal + KEY);
 
       // 调服务端注册接口
