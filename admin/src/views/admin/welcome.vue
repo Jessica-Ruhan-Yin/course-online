@@ -127,6 +127,120 @@
 
         <div class="space-12"></div>
       </div><!-- /.col -->
+
+      <div class="col-sm-6">
+        <div class="widget-box transparent">
+          <div class="widget-header widget-header-flat">
+            <h4 class="widget-title lighter">
+              <i class="ace-icon fa fa-star orange"></i>
+              课程销售排名
+            </h4>
+
+          </div>
+
+          <div class="widget-body">
+            <div class="widget-main no-padding">
+              <table class="table table-bordered table-striped">
+                <thead class="thin-border-bottom">
+                <tr>
+                  <th>
+                    <i class="ace-icon fa fa-caret-right blue"></i>课程名称
+                  </th>
+
+                  <th>
+                    <i class="ace-icon fa fa-caret-right blue"></i>价格
+                  </th>
+
+                  <th>
+                    <i class="ace-icon fa fa-caret-right blue"></i>购买数
+                  </th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr>
+                  <td>开发工具IDEA从入门到爱不释手</td>
+
+                  <td>
+                    <b class="green">￥299.00</b>
+                  </td>
+
+                  <td>
+                    <span class="label label-warning arrowed arrowed-right">5,132</span>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>SpringCloud+Vue前后端分离开发在线视频课程系统</td>
+
+                  <td>
+                    <b class="red">￥388.00</b>
+                  </td>
+
+                  <td>
+                    <span class="label label-warning arrowed arrowed-right">3,132</span>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>SpringBoot+Vue3前后端分离 实战wiki知识库系统</td>
+
+                  <td>
+                    <b class="green">￥199.00</b>
+                  </td>
+
+                  <td>
+                    <span class="label label-warning arrowed arrowed-right">2,132</span>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>企业级Java电商网站开发(服务端)</td>
+
+                  <td>
+                    <b class="green">￥299.00</b>
+                  </td>
+
+                  <td>
+                    <span class="label label-success arrowed arrowed-right">1,654</span>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Java从入门到精通</td>
+
+                  <td>
+                    <b class="green">￥199.00</b>
+                  </td>
+
+                  <td>
+                    <span class="label label-success arrowed arrowed-right">1,254</span>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div><!-- /.widget-main -->
+          </div><!-- /.widget-body -->
+        </div><!-- /.widget-box -->
+      </div><!-- /.col -->
+      <div class="col-sm-6">
+        <div class="widget-box transparent">
+          <div class="widget-header widget-header-flat">
+            <h4 class="widget-title lighter">
+              <i class="ace-icon fa fa-star orange"></i>
+              分类销售排名
+            </h4>
+
+          </div>
+
+          <div class="widget-body">
+            <div class="widget-main">
+              <div id="piechart-placeholder"></div>
+
+            </div><!-- /.widget-main -->
+          </div><!-- /.widget-body -->
+        </div><!-- /.widget-box -->
+      </div><!-- /.col -->
     </div><!-- /.row -->
   </div>
 </template>
@@ -140,8 +254,9 @@ export default {
     // sidebar激活样式方法一
     // this.$parent.activeSidebar("welcome-sidebar");
     _this.drawSaleChart();
+    _this.drawPieChart();
   },
-  
+
   methods: {
     drawSaleChart() {
       // 生成随机两组数据
@@ -177,7 +292,44 @@ export default {
           borderColor: '#555'
         }
       });
-    }
+    },
+
+    drawPieChart() {
+      let placeholder = $('#piechart-placeholder').css({'width': '90%', 'min-height': '180px'});
+      let data = [
+        {label: "Java", data: 38.7, color: "rgba(104,188,49,0.49)"},
+        {label: "Python", data: 24.5, color: "rgba(139,202,248,0.7)"},
+        {label: "Android", data: 18.6, color: "#f3d0eb"},
+        {label: "其它", data: 10, color: "rgba(254,224,116,0.62)"},
+      ];
+      $.plot(placeholder, data, {
+        series: {
+          pie: {
+            show: true,
+            tilt: 0.8,
+            highlight: {
+              opacity: 0.25
+            },
+            stroke: {
+              color: '#fff',
+              width: 2
+            },
+            startAngle: 2
+          }
+        },
+        legend: {
+          show: true,
+          position: "ne",
+          labelBoxBorderColor: null,
+          margin: [-30, 15]
+        },
+        grid: {
+          hoverable: true,
+          clickable: true
+        }
+      })
+    },
   }
 }
 </script>
+
