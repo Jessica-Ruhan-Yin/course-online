@@ -263,8 +263,15 @@ export default {
         mobile: _this.memberRegister.mobile,
         use: SMS_USE.REGISTER.key
       };
-
-      _this.sendSmsCode(sms, "register-send-code-btn");
+      _this.$ajax.get('http://127.0.0.1:9000/business/web/member/is-mobile-exist/' +  _this.memberRegister.mobile).then((response) => {
+        let resp = response.data;
+        if (resp.success) {
+          Toast.warning("手机号已被注册");
+        } else {
+          //调用服务端发送短信接口
+          _this.sendSmsCode(sms, "register-send-code-btn");
+        }
+      })
     },
 
     /**

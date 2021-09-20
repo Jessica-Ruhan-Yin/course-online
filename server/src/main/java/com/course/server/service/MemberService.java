@@ -81,15 +81,15 @@ public class MemberService {
      * 根据手机号查询会员信息
      */
     public Member selectByMobile(String mobile) {
-        if(StringUtils.isEmpty(mobile)){
+        if (StringUtils.isEmpty(mobile)) {
             return null;
         }
         MemberExample example = new MemberExample();
         example.createCriteria().andMobileEqualTo(mobile);
         List<Member> memberList = memberMapper.selectByExample(example);
-        if(memberList==null||memberList.size()==0){
+        if (memberList == null || memberList.size() == 0) {
             return null;
-        }else {
+        } else {
             return memberList.get(0);
         }
     }
@@ -99,18 +99,26 @@ public class MemberService {
      */
     public LoginMemberDto login(MemberDto memberDto) {
         Member member = selectByMobile(memberDto.getMobile());
-        if(member==null){
+        if (member == null) {
             LOG.info("手机号不存在, {}", memberDto.getMobile());
             throw new BusinessException(BusinessExceptionCode.LOGIN_MEMBER_ERROR);
-        }else {
-            if(member.getPassword().equals(memberDto.getPassword())){
+        } else {
+            if (member.getPassword().equals(memberDto.getPassword())) {
                 //登录成功
                 LoginMemberDto loginMemberDto = CopyUtil.copy(member, LoginMemberDto.class);
                 return loginMemberDto;
-            }else {
+            } else {
                 LOG.info("密码不对, 输入密码：{}, 数据库密码：{}", memberDto.getPassword(), member.getPassword());
                 throw new BusinessException(BusinessExceptionCode.LOGIN_MEMBER_ERROR);
             }
         }
+    }
+
+    /**
+     * 通过手机号查找会员
+     */
+    public MemberDto findByMobile(String mobile) {
+        Member member = this.selectByMobile(mobile);
+        return CopyUtil.copy(member, MemberDto.class);
     }
 }

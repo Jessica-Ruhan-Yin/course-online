@@ -104,4 +104,20 @@ public class MemberController {
         LOG.info("从redis中删除token：{}", token);
         return responseDto;
     }
+
+    /**
+     * 校验手机号是否存在
+     */
+    @GetMapping(value = "/is-mobile-exist/{mobile}")
+    public ResponseDto isMobileExist(@PathVariable(value = "mobile") String mobile) {
+        LOG.info("查询手机号是否存在开始");
+        ResponseDto responseDto = new ResponseDto();
+        MemberDto memberDto = memberService.findByMobile(mobile);
+        if (memberDto == null) {
+            responseDto.setSuccess(false);
+        } else {
+            responseDto.setSuccess(true);
+        }
+        return responseDto;
+    }
 }
