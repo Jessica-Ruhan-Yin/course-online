@@ -264,13 +264,13 @@ export default {
         use: SMS_USE.REGISTER.key
       };
 
-      _this.sendSmsCode(sms);
+      _this.sendSmsCode(sms, "register-send-code-btn");
     },
 
     /**
      * 发送短信
      */
-    sendSmsCode(sms) {
+    sendSmsCode(sms, btnId) {
       let _this = this;
 
       //调用服务端发送短信接口
@@ -278,10 +278,34 @@ export default {
         let resp = response.data;
         if (resp.success) {
           Toast.success("短信已发送");
+
+          //开始倒计时
+          _this.countdown = 60;
+          _this.setTime(btnId);
         } else {
           Toast.warning(resp.message);
         }
       })
+    },
+
+    /**
+     * 倒计时
+     */
+    setTime(btnId) {
+      let _this = this;
+      let btn = $("#" + btnId);
+      if (_this.countdown === 0) {
+        btn.removeAttr("disabled");
+        btn.text("获取验证码");
+        return;
+      } else {
+        btn.attr("disabled", true);
+        btn.text("重新发送（" + _this.countdown + "）");
+        _this.countdown--;
+      }
+      setTimeout(function () {
+        _this.setTime(btnId);
+      }, 1000);
     },
   }
 }
