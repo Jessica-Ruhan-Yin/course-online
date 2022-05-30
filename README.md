@@ -1,4 +1,4 @@
-# Ssica Online Course System
+# Jessica's Online Course System
 This is an online course system
 - Customers can view the course ad teacher information
 - Only registered users can view the course videos
