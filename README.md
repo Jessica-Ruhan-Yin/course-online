@@ -1,74 +1,78 @@
-# Ssica在线视频课程系统
+# Ssica Online Course System
+This is an online course system
+- Customers can view the course ad teacher information
+- Only registered users can view the course videos
+- Admins can sign in the admin dashboard and manage resources according to their permission
 
-## 源码下载
-使用下面的命令将源码从远程仓库拉取到本地，需要本地提前安装好git
+## Installation
+Use the following command to pull the source code from the remote repository to the local
 
 ```
 git clone https://git.imooc.com/littlelittleJessica/course-online.git
-或
+or
 git clone ssh://git@git.imooc.com:80/littlelittleJessica/course-online.git
 ```
 
-## 项目模块说明
+## modules in project
 * **admin**<br>
-控台管理，vue cli项目
+admin dashborad, managing resources，vue cli project
 * **business**<br>
-核心业务模块，spring boot项目
+The core bussiness module including all business controllers. (spring boot project)
 * **doc**<br>
-项目相关的文档，包含项目数据库初始化脚本
+Related documentation, including database initialization script
 * **eureka**<br>
-注册中心，spring boot项目
+Registration Center. (spring boot project)
 * **file**<br>
-文件模块，spring boot项目
+File module, including file upload operations. (spring boot project)
 * **gateway**<br>
-路由模块，spring boot项目
+Routing module, define the gateway of the project. (spring boot project)
 * **generator**<br>
-代码生成器
+Mybatis code generator, run mybatis-generator to generate domain, mapper.xml and mapper for a table
 * **server**<br>
-公共jar模块，被business, file, system依赖
+Public jar module which business, file, system dependent on (spring boot project)
 * **system**<br>
-系统模块，spring boot项目
+System module，including system operations such as user login. (spring boot project)
 * **web**<br>
-网站模块，vue cli项目
+Front end web module，vue cli project
 
 
-## 项目初始化
-* 需要本地安装好idea, nodejs，jdk1.8, mysql5.7, navicat（数据库可视化工具）
-* 将下载好的源码，用idea打开
-* 刷新maven依赖
-* 安装vue cli，参照课程4-1
+## Project initialization
+* You should install the following tools: idea, nodejs，jdk1.8, mysql8.0, navicat
+* Open the source code with idea
+* Refresh the maven dependencies
+* Install vue-cli
 ```
 npm install -g @vue/cli
 ```
-* 下载node模块
+* Install node module
 ```
-初始化web模块
+Initialize web module
 cd web
 npm install
 
-初始化admin模块
+Initialize admin module
 cd admin
 npm install
 ```
-* 新建数据库courseimooc，并courseimooc，密码courseimooc，参照课程3-1
-* 数据库初始脚本在/doc/db/all.sql
+* Create database: courseimooc
+* The database initialization script is in /doc/db/all.sql
 
-## 项目启动
-* 启动注册中心：EurekaApplication
-* 启动路由模块：GatewayApplication
-* 启动系统模块：SystemApplication
-* 启动业务模块：BusinessApplication
-* 启动文件模块：FileApplication
-* 启动控台管理：admin\package.json
-* 启动前端网站：web\package.json
+## Run the project
+* Run Eureka：EurekaApplication
+* Run the gateway module：GatewayApplication
+* Run the system module：SystemApplication
+* Run the business module：BusinessApplication
+* Run the file module：FileApplication
+* Run the frontend-admin module：admin\package.json
+* Run the frontend-web module：web\package.json
 
-## 页面访问
-* 控台地址: http://localhost:8080/login<br>
-初始用户名密码：test/test
-* 控台地址: http://localhost:8081<br>
-可以自己注册用户，短信验证码从后台日志看，或看sms表
+## Page access
+* The admin dashboard address: http://localhost:8080/login<br>
+The initial username and password：test/test
+* The web address: http://localhost:8083<br>
+You can register a new user(check the backend log to get the SMS code)
 
-## 资源配置
-所有资源都在/doc/db/resource.json<br>
-需要在控台上将所有的资源配置进去，并在角色管理中配置权限
-权限配置好后，需要重新登录
+## Resources
+All the resources are in /doc/db/resource.json<br>
+You need to configure all resources on the admin dashboard and configure permissions in role management
+After the permissions are configured, you need to log in again
